@@ -2,8 +2,9 @@
 
 @main("Welcome to Play") {
 
-	<div class="container">
+	<div ng-controller="todoListController as TLC" class="container">
 		<p>Hello, world!</p>
+		{{TLC.todos}}
 	</div>
 
 
