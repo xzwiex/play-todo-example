@@ -1,13 +1,15 @@
-(->
-  TodoListController = ($log, todoService) ->
-    $this = @
-    $log.log 'Controller ready'
+TodoListController = ($log, todoService) ->
+  vm = @
+  $log.log 'Controller ready'
 
-    $log.log todoService
+  fetchTodos = ->
     todoService.fetch().then (todos) ->
       $log.log todos
-      $this.todos = todos
+      vm.todos = todos
+
+  fetchTodos()
+
+  vm
 
 
-  angular.module('todoApplication').controller 'todoListController', TodoListController
-)()
+angular.module('todoApplication').controller 'todoListController', TodoListController

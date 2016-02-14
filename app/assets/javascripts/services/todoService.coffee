@@ -1,8 +1,9 @@
 (->
 
-  TodoService = ($http) ->
+  TodoService = ($http, $q) ->
 
-    fetch = -> $http.get '/todo/list'
+    fetch = ->
+      $http.get('/todo/list').then( (data) -> data.data )
 
     return {
       fetch : fetch

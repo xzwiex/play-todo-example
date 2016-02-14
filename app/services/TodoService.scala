@@ -1,10 +1,24 @@
 package services
+import play.api.db._
+import play.api.Play.current
+import anorm._
 
-import model.Todo
 
 /**
  * Created by Dmitry on 13.02.2016.
  */
 class TodoService {
-  def todoList = Todo.generateTodos(10)
+
+  def todoList = {
+
+
+    DB.withConnection { conn =>
+
+      SQL("SELECT id, text, finished from public.todo order by weight").foldWhile(List[Int, String, Boolean]) {
+        (list, row) =>
+          li
+      }
+
+    }
+  }
 }

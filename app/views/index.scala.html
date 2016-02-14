@@ -2,9 +2,20 @@
 
 @main("Welcome to Play") {
 
-	<div ng-controller="todoListController as TLC" class="container">
-		<p>Hello, world!</p>
-		{{TLC.todos}}
+	<div ng-controller="todoListController as todoList" class="container">
+		<form  class="form-horizontal">
+
+			<div class="form-group" ng-repeat="todo in todoList.todos">
+				<div class="col-xs-1">
+					<input type="checkbox" ng-model="todo.finished">
+				</div>
+				<div class="col-xs-11">
+					<input class="form-control" type="text" ng-model="todo.text">
+				</div>
+			</div>
+
+		</form>
+		<span ng-bind="test"></span>
 	</div>
 
 
