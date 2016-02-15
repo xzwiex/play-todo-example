@@ -1,15 +1,15 @@
-(->
+TodoService = ($http, $q) ->
 
-  TodoService = ($http, $q) ->
+  todoList = ->
+    $http.get('/todo/list').then( (data) -> data.data )
 
-    fetch = ->
-      $http.get('/todo/list').then( (data) -> data.data )
+  addTodo = (entity) ->
+    $http.post('/todo/add', entity).then( (data) -> data.data )
 
-    return {
-      fetch : fetch
-    }
+  return {
+    todoList : todoList
+    addTodo : addTodo
+  }
 
 
-
-  angular.module('todoApplication').factory 'todoService', TodoService
-)()
+angular.module('todoApplication').factory 'todoService', TodoService

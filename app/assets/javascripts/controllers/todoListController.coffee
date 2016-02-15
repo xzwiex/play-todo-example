@@ -3,11 +3,20 @@ TodoListController = ($log, todoService) ->
   $log.log 'Controller ready'
 
   fetchTodos = ->
-    todoService.fetch().then (todos) ->
+    todoService.todoList().then (todos) ->
       $log.log todos
       vm.todos = todos
 
   fetchTodos()
+
+  vm.addTodo = ->
+
+    toInsert =
+      text : 'New todo'
+      finished : false
+      weight : 0
+
+    todoService.addTodo(toInsert).then fetchTodos
 
   vm
 

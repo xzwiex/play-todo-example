@@ -22,7 +22,7 @@ object TodoEntity {
     }
   }
 
-  def apply(dto:Todo) =  TodoEntity(dto.id.getOrElse(0), dto.text, dto.finished, dto.weight)
+  def apply(dto:Todo) =  new TodoEntity(dto.id.getOrElse(0), dto.text, dto.finished, dto.weight)
 
 
 }
@@ -31,13 +31,13 @@ object TodoEntity {
 class TodoService {
 
   def todoList = {
-    DB.withConnection { conn =>
+    DB.withConnection { implicit  conn =>
       SQL("SELECT id, text, finished, weight from public.todo order by weight").as(TodoEntity.fromDb.*)
     }
   }
 
   def findTodoById(id: Int) = {
-    DB.withConnection { conn =>
+    DB.withConnection { implicit conn =>
       SQL("SELECT id, text, finished, weight from public.todo where id = {id}").on(
         'id -> id
       ).as(TodoEntity.fromDb.singleOpt)
@@ -46,8 +46,8 @@ class TodoService {
   }
 
   def addTodo(entity: TodoEntity) = {
-    DB.withConnection { conn =>
-      SQL("INSERT INTO public.todo(text, finished, weight) values({text},{finished}, {weight)").on(
+    DB.withConnection { implicit conn =>
+      SQL("INSERT INTO public.todo(text, finished, weight) values({text},{finished},{weight})").on(
         'text -> entity.text,
         'finished -> entity.finished,
         'weight -> entity.weight

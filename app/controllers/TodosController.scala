@@ -1,28 +1,31 @@
 package controllers
 import com.google.inject.Inject
 import model.Todo
-import play.api.libs.json.Json
+import play.api.libs.json.{JsError, Json}
 import play.api.mvc._
 import services.{TodoEntity, TodoService}
 
 class TodoController @Inject() (todoService: TodoService) extends Controller{
 
-  def list = Action {
-    val todos = todoService.todoList
-    Ok(Json.toJson(todos))
+  def todoList = Action {
+    val todos = todoService.todoList.map( Todo.fromDbEntity(_) )
+    val json = Json.toJson(todos)
+    Ok(json)
   }
 
   def addEntry = Action(parse.json) { request =>
-    val result = request.body.validate[Todo].flatMap {
+    val result = request.body.validate[Todo].map {
       case (todo) =>
-
         val entityId = todoService.addTodo( TodoEntity(todo) )
 
         val entity = todoService.findTodoById(entityId)
 
-        Ok( entity.map( e => Todo(e) ) )
+        val dto: Option[Todo] = entity.map(Todo.fromDbEntity(_))
+        Json.toJson( dto )
     }
-    
+
+    Ok(result.get)
+
   }
 
 }
