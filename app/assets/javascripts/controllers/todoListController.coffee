@@ -1,6 +1,8 @@
 TodoListController = ($log, todoService) ->
 
   vm = @
+
+  vm.filters = 'all'
   $log.log 'Controller ready'
 
   toInsert =
