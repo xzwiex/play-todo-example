@@ -1,18 +1,17 @@
 package model
 
 import play.api.libs.json.Json
+import services.TodoEntity
 
 /**
  * Created by Dmitry on 13.02.2016.
  */
-case class Todo(id: Int, text: String, finished: Boolean, weight: Int)
+case class Todo(id: Option[Long], text: String, finished: Boolean, weight: Int)
 
 object Todo {
+
   implicit val fmt = Json.format[Todo]
 
-  def generateTodos(count: Int) = {
-    (1 to count).toList.map {
-      idx => Todo(idx, s"TodoItem $idx", false, idx)
-    }
-  }
+
+  def apply(dbEntity: TodoEntity) = new Todo(Some(dbEntity.id), dbEntity.text, dbEntity.finished, dbEntity.weight)
 }
