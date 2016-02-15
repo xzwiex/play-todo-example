@@ -2,21 +2,30 @@
 
 @main("Welcome to Play") {
 
-	<div ng-controller="todoListController as todoList" class="container">
+	<div ng-controller="todoListController as TLC" class="container">
 		<form  class="form-horizontal">
 
-			<div class="form-group" ng-repeat="todo in todoList.todos">
-				<div class="col-xs-1">
-					<input type="checkbox" ng-model="todo.finished">
+			<div class="form-group" ng-repeat="todo in TLC.todos">
+				<div class="col-sm-1 col-sm-offset-2 col-xs-1">
+					<div class="checkbox pull-right">
+						<label>
+							<input  ng-change="TLC.updateTodo(todo)" type="checkbox" ng-model="todo.finished">
+						</label>
+					</div>
+
 				</div>
-				<div class="col-xs-11">
-					<input class="form-control" type="text" ng-model="todo.text">
+				<div class="col-sm-6 col-xs-11">
+					<input ng-change="TLC.updateTodo(todo)" class="form-control" type="text" ng-model="todo.text" ng-class="todo.finished ? 'strike' : ''">
 				</div>
 			</div>
 
 			<div class="form-group">
-				<div class="col-xs-4 col-xs-offset-4">
-					<a ng-click="todoList.addTodo()" class="btn btn-primary form-control">Добавить запись</a>
+				<div class="col-sm-4 col-sm-offset-3 col-xs-10">
+					<input type="text" class="form-control" ng-model="TLC.newTodoTitle"/>
+
+				</div>
+				<div class="col-sm-2 col-xs-2">
+					<a ng-click="TLC.addTodo()" class="btn btn-primary form-control">Добавить запись</a>
 				</div>
 			</div>
 

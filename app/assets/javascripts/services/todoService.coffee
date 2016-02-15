@@ -4,11 +4,15 @@ TodoService = ($http, $q) ->
     $http.get('/todo/list').then( (data) -> data.data )
 
   addTodo = (entity) ->
-    $http.post('/todo/add', entity).then( (data) -> data.data )
+    $http.put('/todo/add', entity).then( (data) -> data.data )
+
+  updateTodo = (entity) ->
+    $http.post('/todo/update', entity).then( (data) -> data.data )
 
   return {
     todoList : todoList
     addTodo : addTodo
+    updateTodo : updateTodo
   }
 
 

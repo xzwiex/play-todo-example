@@ -1,22 +1,29 @@
 TodoListController = ($log, todoService) ->
+
   vm = @
   $log.log 'Controller ready'
+
+  toInsert =
+    text : 'New todo'
+    finished : false
+    weight : 0
 
   fetchTodos = ->
     todoService.todoList().then (todos) ->
       $log.log todos
       vm.todos = todos
 
-  fetchTodos()
 
   vm.addTodo = ->
+    entity = angular.copy toInsert
+    entity.text = vm.newTodoTitle
+    todoService.addTodo(entity).then ->
+      fetchTodos()
+      vm.newTodoTitle = ''
 
-    toInsert =
-      text : 'New todo'
-      finished : false
-      weight : 0
+  vm.updateTodo = (entity) -> todoService.updateTodo(entity)
 
-    todoService.addTodo(toInsert).then fetchTodos
+  fetchTodos()
 
   vm
 

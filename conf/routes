@@ -10,4 +10,5 @@ GET        /assets/*file        controllers.Assets.versioned(path="/public", fil
 
 
 GET        /todo/list           controllers.TodoController.todoList
-POST       /todo/add            controllers.TodoController.addEntry
+PUT        /todo/add            controllers.TodoController.addEntry
+POST       /todo/update         controllers.TodoController.updateEntry

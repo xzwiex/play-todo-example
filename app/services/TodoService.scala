@@ -1,6 +1,6 @@
 package services
 
-import model.Todo
+import model.{TodoEntity, Todo}
 import play.api.db._
 import play.api.Play.current
 
@@ -13,19 +13,7 @@ import anorm.SqlParser._
  */
 
 
-case class TodoEntity(id: Long, text: String, finished: Boolean, weight : Int)
 
-object TodoEntity {
-  val fromDb = {
-    get[Long]("id") ~ get[String]("text") ~ get[Boolean]("finished")~ get[Int]("weight") map {
-      case id~text~finished~weight => TodoEntity(id,text,finished,weight)
-    }
-  }
-
-  def apply(dto:Todo) =  new TodoEntity(dto.id.getOrElse(0), dto.text, dto.finished, dto.weight)
-
-
-}
 
 
 class TodoService {
@@ -36,7 +24,7 @@ class TodoService {
     }
   }
 
-  def findTodoById(id: Int) = {
+  def findTodoById(id: Long) = {
     DB.withConnection { implicit conn =>
       SQL("SELECT id, text, finished, weight from public.todo where id = {id}").on(
         'id -> id
@@ -45,12 +33,23 @@ class TodoService {
 
   }
 
-  def addTodo(entity: TodoEntity) = {
+  def addTodo(entity: TodoEntity): Option[Long] = {
     DB.withConnection { implicit conn =>
       SQL("INSERT INTO public.todo(text, finished, weight) values({text},{finished},{weight})").on(
         'text -> entity.text,
         'finished -> entity.finished,
         'weight -> entity.weight
+      ).executeInsert()
+    }
+  }
+
+  def updateTodo(entity: TodoEntity) = {
+    DB.withConnection { implicit conn =>
+      SQL("UPDATE public.todo set text={text}, finished={finished}, weight={weight} where id={id}").on(
+        'text -> entity.text,
+        'finished -> entity.finished,
+        'weight -> entity.weight,
+        'id -> entity.id
       ).executeUpdate()
     }
   }
