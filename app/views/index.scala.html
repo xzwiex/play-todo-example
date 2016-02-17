@@ -1,59 +1,74 @@
-@(message: String)
+@(message: String, handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.views.html._
+
 
 @main("Welcome to Play") {
 
-	<div ng-controller="todoListController as TLC" class="container">
+	@subjectPresentOr(handler) {
+
+		<div ng-controller="todoListController as TLC" class="container">
 
 
-		<form  class="form-horizontal">
+			<form  class="form-horizontal">
 
-			<div class="form-group">
-				<div class="col-sm-6 col-sm-offset-2 col-xs-12">
-					<ul class="nav nav-tabs" role="tablist">
-						<li role="presentation" ng-class="TLC.filters=='all' ? 'active' : ''">
-							<a href="#" ng-click="todoFilters={};TLC.filters='all'">All</a>
-						</li>
-						<li role="presentation" ng-class="TLC.filters=='completed' ? 'active' : ''">
-							<a href="#" ng-click="todoFilters={finished:true};TLC.filters='completed'">Completed</a>
-						</li>
-						<li role="presentation" ng-class="TLC.filters=='uncompleted' ? 'active' : ''">
-							<a href="#" ng-click="todoFilters={finished:false};TLC.filters='uncompleted'">Uncompleted</a>
-						</li>
+				<div class="form-group">
+					<div class="col-sm-6 col-sm-offset-2 col-xs-12">
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" ng-class="TLC.filters=='all' ? 'active' : ''">
+								<a href="#" ng-click="todoFilters={};TLC.filters='all'">All</a>
+							</li>
+							<li role="presentation" ng-class="TLC.filters=='completed' ? 'active' : ''">
+								<a href="#" ng-click="todoFilters={finished:true};TLC.filters='completed'">Completed</a>
+							</li>
+							<li role="presentation" ng-class="TLC.filters=='uncompleted' ? 'active' : ''">
+								<a href="#" ng-click="todoFilters={finished:false};TLC.filters='uncompleted'">Uncompleted</a>
+							</li>
 
-					</ul>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-3 col-sm-offset-2 col-xs-8 col-md-4">
-					<input type="text" class="form-control" ng-model="TLC.newTodoTitle"/>
-
-				</div>
-				<div class="col-sm-3 col-xs-4 col-md-2">
-					<a ng-click="TLC.addTodo()" class="btn btn-primary form-control">Добавить запись</a>
-				</div>
-			</div>
-
-			<div class="form-group" ng-repeat="todo in TLC.todos | filter : todoFilters">
-				<div class="col-sm-1 col-sm-offset-1 col-xs-2">
-					<div class="checkbox pull-right">
-						<label>
-							<input  ng-change="TLC.updateTodo(todo)" type="checkbox" ng-model="todo.finished">
-						</label>
+						</ul>
 					</div>
-
 				</div>
-				<div class="col-sm-6 col-xs-10">
-					<input ng-change="TLC.updateTodo(todo)" class="form-control" type="text" ng-model="todo.text" ng-class="todo.finished ? 'strike' : ''">
+				<div class="form-group">
+					<div class="col-sm-3 col-sm-offset-2 col-xs-8 col-md-4">
+						<input type="text" class="form-control" ng-model="TLC.newTodoTitle"/>
+
+					</div>
+					<div class="col-sm-3 col-xs-4 col-md-2">
+						<a ng-click="TLC.addTodo()" class="btn btn-primary form-control">Добавить запись</a>
+					</div>
+				</div>
+
+				<div class="form-group" ng-repeat="todo in TLC.todos | filter : todoFilters">
+					<div class="col-sm-1 col-sm-offset-1 col-xs-2">
+						<div class="checkbox pull-right">
+							<label>
+								<input  ng-change="TLC.updateTodo(todo)" type="checkbox" ng-model="todo.finished">
+							</label>
+						</div>
+
+					</div>
+					<div class="col-sm-6 col-xs-10">
+						<input ng-change="TLC.updateTodo(todo)" class="form-control" type="text" ng-model="todo.text" ng-class="todo.finished ? 'strike' : ''">
+					</div>
+				</div>
+
+
+
+			</form>
+
+		</div>
+
+
+
+	} {
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					Login, please
+				</div>
+				<div class="col-xs-12">
+					<ulogin-panel></ulogin-panel>
 				</div>
 			</div>
-
-
-
-		</form>
-
-	</div>
-
-
-
-
+		</div>
+	}
 }

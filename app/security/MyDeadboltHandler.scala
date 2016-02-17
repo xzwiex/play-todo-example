@@ -1,9 +1,9 @@
 package security
 
 import be.objectify.deadbolt.scala.{DynamicResourceHandler, DeadboltHandler}
+import model.User
 import play.api.mvc.{Request, Result, Results}
 import be.objectify.deadbolt.core.models.Subject
-import models.User
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
@@ -20,8 +20,13 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
   }
 
   override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
-    // e.g. request.session.get("user")
-    Future(Some(new User("steve")))
+
+    Future.successful(
+      request.session.get("profile").map { value =>
+        new User(value)
+      }
+    )
+
   }
 
   def onAuthFailure[A](request: Request[A]): Future[Result] = {

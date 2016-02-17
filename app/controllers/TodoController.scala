@@ -1,16 +1,20 @@
 package controllers
+
+import be.objectify.deadbolt.scala.DeadboltActions
 import com.google.inject.Inject
 import model.{TodoEntity, Todo}
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc._
 import services.TodoService
 
-class TodoController @Inject() (todoService: TodoService) extends Controller {
+class TodoController @Inject() (todoService: TodoService, deadbolt: DeadboltActions) extends Controller {
 
-  def todoList = Action {
-    val todos = todoService.todoList.map(Todo.fromDbEntity)
-    val json = Json.toJson(todos)
-    Ok(json)
+  def todoList = deadbolt.SubjectPresent() {
+    Action {
+      val todos = todoService.todoList.map(Todo.fromDbEntity)
+      val json = Json.toJson(todos)
+      Ok(json)
+    }
   }
 
   def addEntry() = Action(parse.json) { request =>

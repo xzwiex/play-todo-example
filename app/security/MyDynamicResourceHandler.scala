@@ -1,9 +1,9 @@
 package security
 
-import be.objectify.deadbolt.scala.{DynamicResourceHandler, DeadboltHandler}
-import collection.immutable.Map
+import be.objectify.deadbolt.scala.{DeadboltHandler, DynamicResourceHandler}
 import play.api.mvc.Request
 
+import scala.collection.immutable.Map
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
