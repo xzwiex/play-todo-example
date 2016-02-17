@@ -17,25 +17,26 @@ class UloginUtls
     defer.promise
 
 
-utils = new UloginUtls()
+
 
 UloginCtrl = ($log, $window, $q, $scope) ->
 
-  $scope.elementId = utils.generateId()
+  utils = new UloginUtls()
 
+  $scope.elementId = utils.generateId()
   $scope.callbackName = utils.generateId 'uloginCallback'
+
 
   $window[$scope.callbackName] = (token) ->
     $log.log token
 
-  uloginInit = ->
+  @uloginInit = ->
     $window.uLogin.customInit @elementId
 
-
   if $window.uLogin
-    uloginInit()
+    @uloginInit()
   else
-    utils.addScripts($q).then uloginInit
+    utils.addScripts($q).then @uloginInit
 
 
 UloginPanel = ->
