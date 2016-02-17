@@ -22,7 +22,7 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
   override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
 
     Future.successful(
-      request.session.get("profile").map { value =>
+      request.session.get("profileId").map { value =>
         new User(value.toInt, value)
       }
     )

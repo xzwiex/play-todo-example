@@ -17,8 +17,9 @@ libraryDependencies ++= Seq(
   "org.webjars" % "angularjs" % "1.5.0",
   "org.webjars" % "bootstrap" % "3.3.6",
   "be.objectify" %% "deadbolt-scala" % "2.4.3"
-
 )
+
+pipelineStages := Seq(rjs)
 
 resolvers += Resolver.url("Objectify Play Repository", url("http://deadbolt.ws/releases/"))(Resolver.ivyStylePatterns)
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

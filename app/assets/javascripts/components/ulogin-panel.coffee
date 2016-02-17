@@ -19,7 +19,7 @@ class UloginUtls
 
 
 
-UloginCtrl = ($log, $window, $q, $scope) ->
+UloginCtrl = ($log, $window, $q, $scope, $http) ->
 
   utils = new UloginUtls()
 
@@ -28,6 +28,8 @@ UloginCtrl = ($log, $window, $q, $scope) ->
 
 
   $window[$scope.callbackName] = (token) ->
+    $http.get("/ulogin/#{token}").then (data) ->
+      $window.location.reload()
     $log.log token
 
   @uloginInit = ->

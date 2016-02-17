@@ -31,7 +31,7 @@ class ProfileService {
 
   }
 
-  def addTodo(entity: User): Option[Long] = {
+  def createProfile(entity: User): Option[Long] = {
 
     if( findProfileByEmail(entity.email).isEmpty ) {
       DB.withConnection { implicit conn =>
