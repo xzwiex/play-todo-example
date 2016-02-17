@@ -1,5 +1,6 @@
 package services
 
+import model.service.TodoService
 import model.{TodoEntity, Todo}
 import play.api.db._
 import play.api.Play.current
@@ -16,15 +17,15 @@ import anorm.SqlParser._
 
 
 
-class TodoService {
+class TodoServiceImpl extends TodoService{
 
-  def todoList = {
+  override def todoList: Seq[TodoEntity] = {
     DB.withConnection { implicit  conn =>
       SQL("SELECT id, text, finished, weight from public.todo order by weight").as(TodoEntity.fromDb.*)
     }
   }
 
-  def findTodoById(id: Long) = {
+  override def findTodoById(id: Long): Option[TodoEntity] = {
     DB.withConnection { implicit conn =>
       SQL("SELECT id, text, finished, weight from public.todo where id = {id}").on(
         'id -> id
@@ -33,7 +34,7 @@ class TodoService {
 
   }
 
-  def addTodo(entity: TodoEntity): Option[Long] = {
+  override def addTodo(entity: TodoEntity): Option[Long] = {
     DB.withConnection { implicit conn =>
       SQL("INSERT INTO public.todo(text, finished, weight) values({text},{finished},{weight})").on(
         'text -> entity.text,
@@ -43,7 +44,7 @@ class TodoService {
     }
   }
 
-  def updateTodo(entity: TodoEntity) = {
+  override def updateTodo(entity: TodoEntity): Int = {
     DB.withConnection { implicit conn =>
       SQL("UPDATE public.todo set text={text}, finished={finished}, weight={weight} where id={id}").on(
         'text -> entity.text,

@@ -23,7 +23,7 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
 
     Future.successful(
       request.session.get("profile").map { value =>
-        new User(value)
+        new User(value.toInt, value)
       }
     )
 

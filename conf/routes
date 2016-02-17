@@ -13,4 +13,4 @@ GET         /todo/list           controllers.TodoController.todoList
 PUT         /todo/add            controllers.TodoController.addEntry
 POST        /todo/update         controllers.TodoController.updateEntry
 
-GET         /login               controllers.Application.login
+GET         /ulogin               controllers.LoginController.ulogin

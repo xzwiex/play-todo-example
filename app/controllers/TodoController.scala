@@ -2,10 +2,11 @@ package controllers
 
 import be.objectify.deadbolt.scala.DeadboltActions
 import com.google.inject.Inject
+import model.service.TodoService
 import model.{TodoEntity, Todo}
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc._
-import services.TodoService
+import services.TodoServiceImpl
 
 class TodoController @Inject() (todoService: TodoService, deadbolt: DeadboltActions) extends Controller {
 
