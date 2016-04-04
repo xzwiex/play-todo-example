@@ -1,33 +1,33 @@
-TodoListController = ($log, todoService) ->
-
-  vm = @
-
-  vm.filters = 'all'
-  $log.log 'Controller ready'
+class TodoListController
 
   toInsert =
     text : 'New todo'
     finished : false
     weight : 0
 
-  fetchTodos = ->
-    todoService.todoList().then (todos) ->
-      $log.log todos
-      vm.todos = todos
+  constructor : (@$log, @todoService) ->
+
+    @filters = 'all'
+    @$log.log 'Controller ready'
+    @fetchTodos()
 
 
-  vm.addTodo = ->
+  fetchTodos : ->
+    @todoService.todoList().then (todos) =>
+      @$log.log todos
+      @todos = todos
+
+  addTodo : ->
     entity = angular.copy toInsert
-    entity.text = vm.newTodoTitle
-    todoService.addTodo(entity).then ->
-      fetchTodos()
-      vm.newTodoTitle = ''
+    entity.text = @newTodoTitle
+    @todoService.addTodo(entity).then =>
+      @fetchTodos()
+      @newTodoTitle = ''
 
-  vm.updateTodo = (entity) -> todoService.updateTodo(entity)
+  updateTodo : (entity) -> @todoService.updateTodo(entity)
 
-  fetchTodos()
 
-  vm
+TodoListController.$inject = ['$log', 'todoService']
 
 
 angular.module('todoApplication').controller 'todoListController', TodoListController
