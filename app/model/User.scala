@@ -1,8 +1,7 @@
 package model
 
-import anorm.SqlParser._
-import anorm.~
 import be.objectify.deadbolt.core.models.{Permission, Subject}
+import model.db.Profile
 import play.libs.Scala
 
 /**
@@ -24,10 +23,8 @@ class User(val id: Long, val email: String) extends Subject  {
 }
 
 object User {
-  val fromDb = {
-    get[Long]("id") ~ get[String]("email") map {
-      case id~email => new User(id,email)
-    }
+  def fromDto(dto:Profile) = {
+    new User(dto.id, dto.email)
   }
 
 }

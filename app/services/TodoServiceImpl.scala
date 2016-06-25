@@ -5,9 +5,6 @@ import model.{TodoEntity, Todo}
 import play.api.db._
 import play.api.Play.current
 
-import anorm._
-import anorm.SqlParser._
-
 
 /**
  * Created by Dmitry on 13.02.2016.
@@ -17,9 +14,9 @@ import anorm.SqlParser._
 
 
 
-class TodoServiceImpl extends TodoService{
+class TodoServiceImpl /*extends TodoService*/{
 
-  override def todoList: Seq[TodoEntity] = {
+  /*override def todoList: Seq[TodoEntity] = {
     DB.withConnection { implicit  conn =>
       SQL("SELECT id, text, finished, weight from public.todo order by weight").as(TodoEntity.fromDb.*)
     }
@@ -53,5 +50,5 @@ class TodoServiceImpl extends TodoService{
         'id -> entity.id
       ).executeUpdate()
     }
-  }
+  }*/
 }

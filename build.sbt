@@ -11,11 +11,8 @@ libraryDependencies ++= Seq(
   cache,
   ws,
   specs2 % Test,
-  "com.typesafe.slick" %% "slick" % "3.1.1",
-  "com.typesafe.play" %% "play-slick" % "1.1.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "1.1.0",
-  "com.typesafe.play" %% "play-slick" % "2.0.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
+  /*"com.typesafe.slick" %% "slick" % "3.1.1",*/
+  "com.typesafe.play" %% "play-slick" % "2.0.2",
   "be.objectify" %% "deadbolt-scala" % "2.4.3"
 )
 

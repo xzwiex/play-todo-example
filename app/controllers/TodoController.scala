@@ -10,7 +10,7 @@ import services.TodoServiceImpl
 
 class TodoController @Inject() (todoService: TodoService, deadbolt: DeadboltActions) extends Controller {
 
-  def todoList = deadbolt.SubjectPresent() {
+  /*def todoList = deadbolt.SubjectPresent() {
     Action {
       val todos = todoService.todoList.map(Todo.fromDbEntity)
       val json = Json.toJson(todos)
@@ -49,5 +49,5 @@ class TodoController @Inject() (todoService: TodoService, deadbolt: DeadboltActi
 
     Ok(result.get)
 
-  }
+  }*/
 }

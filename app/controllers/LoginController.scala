@@ -9,15 +9,15 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSResponse, WS}
 import play.api.mvc._
 import play.api.Play.current
-import services.ProfileService
+import services.ProfileServiceImpl
 
 import scala.concurrent.Future
 
-class LoginController @Inject() (handlers: HandlerCache, profileService: ProfileService) extends Controller {
+class LoginController @Inject() (handlers: HandlerCache, profileService: ProfileServiceImpl) extends Controller {
 
   implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  /*Todo*/
+ /* /*Todo*/
   def ulogin(token: String) = Action.async {     implicit request =>
 
     Logger.debug(s"Fetch ulogin data for token $token")
@@ -41,5 +41,5 @@ class LoginController @Inject() (handlers: HandlerCache, profileService: Profile
     }
 
   }
-
+*/
 }
