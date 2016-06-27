@@ -1,11 +1,15 @@
 package services
 
 import com.google.inject.Inject
+import model.SiteProfile
+import model.db.Profile
 import model.service.ProfileService
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
-import slick.lifted.{TableQuery, Tag}
-import slick.model.Table
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import scala.concurrent.Future
+
+
 
 
 /**
@@ -13,19 +17,17 @@ import slick.model.Table
   */
 
 
-class ProfileServiceImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
+class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   extends ProfileService
     with HasDatabaseConfigProvider[JdbcProfile] {
 
 
   import driver.api._
 
-  case class Profile(id: Int, email: String )
-
 
   class Profiles(tag: Tag) extends Table[Profile](tag, "profile") {
     // Auto Increment the id primary key column
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     // The name can't be null
     def email = column[String]("email")
     // the * projection (e.g. select * ...) auto-transforms the tupled
@@ -38,30 +40,24 @@ class ProfileServiceImpl @Inject()(dbConfigProvider: DatabaseConfigProvider)
   private val profiles = TableQuery[Profiles]
 
   def findProfileById(id: Long) = {
-    db.run(profiles.filter(_.id === 101).result.headOption)
+    db.run(profiles.filter(_.id === id).result.headOption)
   }
 
-  /*def findProfileByEmail(email: String) = {
-    DB.withConnection { implicit conn =>
-      SQL("SELECT id, email" +
-        " from public.profile where email = {email}").on(
-        'email -> email
-      ).as(User.fromDb.singleOpt)
+  def findProfileByEmail(email: String) = {
+    db.run(profiles.filter(_.email === email).result.headOption)
+  }
+
+  def createProfile(entity: SiteProfile) = {
+
+    findProfileByEmail(entity.email).flatMap {
+      p =>  if( p.isEmpty ) {
+        db.run(profiles += Profile(entity.id, entity.email)).map( r => () )
+      } else Future.successful(None)
     }
 
+
+
   }
-
-  def createProfile(entity: User): Option[Long] = {
-
-    if( findProfileByEmail(entity.email).isEmpty ) {
-      DB.withConnection { implicit conn =>
-        SQL("INSERT INTO public.profile(email) values({email})").on(
-          'email -> entity.email
-        ).executeInsert()
-      }
-    } else None
-
-  }*/
 
 
 }

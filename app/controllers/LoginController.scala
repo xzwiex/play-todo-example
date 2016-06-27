@@ -2,7 +2,7 @@ package controllers
 
 import be.objectify.deadbolt.scala.cache.HandlerCache
 import com.google.inject.Inject
-import model.User
+import model.SiteProfile$
 
 import play.api.Logger
 import play.api.libs.json.Json

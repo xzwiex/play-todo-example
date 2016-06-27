@@ -9,7 +9,7 @@ import play.libs.Scala
  * @author Steve Chaloner (steve@objectify.be)
  */
 
-class User(val id: Long, val email: String) extends Subject  {
+class SiteProfile(val id: Long, val email: String) extends Subject  {
 
   def getRoles: java.util.List[SecurityRole] = {
     Scala.asJava(Seq.empty)
@@ -22,9 +22,9 @@ class User(val id: Long, val email: String) extends Subject  {
   def getIdentifier: String = this.email
 }
 
-object User {
+object SiteProfile {
   def fromDto(dto:Profile) = {
-    new User(dto.id, dto.email)
+    new SiteProfile(dto.id, dto.email)
   }
 
 }

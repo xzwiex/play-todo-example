@@ -1,9 +1,10 @@
 package security
 
-import be.objectify.deadbolt.scala.{DynamicResourceHandler, DeadboltHandler}
-import model.User
+import be.objectify.deadbolt.scala.{DeadboltHandler, DynamicResourceHandler}
+import model.{SiteProfile, SiteProfile$}
 import play.api.mvc.{Request, Result, Results}
 import be.objectify.deadbolt.core.models.Subject
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
 
@@ -23,7 +24,7 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
 
     Future.successful(
       request.session.get("profileId").map { value =>
-        new User(value.toInt, value)
+        new SiteProfile(value.toInt, value)
       }
     )
 
