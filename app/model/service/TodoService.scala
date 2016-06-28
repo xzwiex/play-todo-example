@@ -2,18 +2,21 @@ package model.service
 
 import com.google.inject.ImplementedBy
 import model.TodoEntity
+import model.db.Todo
 import services.TodoServiceImpl
+
+import scala.concurrent.Future
 
 /**
  * Created by Dmitry on 17.02.2016.
  */
 @ImplementedBy(classOf[TodoServiceImpl])
 trait TodoService {
-  def todoList: Seq[TodoEntity]
+  def todoList: Future[Seq[Todo]]
 
-  def findTodoById(id: Long): Option[TodoEntity]
+  def findTodoById(id: Long): Future[Option[Todo]]
 
-  def addTodo(entity: TodoEntity): Option[Long]
+  def addTodo(entity: Todo): Future[Unit]
 
-  def updateTodo(entity: TodoEntity): Int
+  def updateTodo(entity: Todo): Future[Unit]
 }

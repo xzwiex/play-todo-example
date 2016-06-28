@@ -1,9 +1,12 @@
 package services
 
+import com.google.inject.Inject
+import model.db.Todo
 import model.service.TodoService
-import model.{TodoEntity, Todo}
-import play.api.db._
-import play.api.Play.current
+import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import slick.driver.JdbcProfile
+
+import scala.concurrent.Future
 
 
 /**
@@ -14,41 +17,51 @@ import play.api.Play.current
 
 
 
-class TodoServiceImpl /*extends TodoService*/{
+class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
+  extends TodoService
+    with HasDatabaseConfigProvider[JdbcProfile] {
 
-  /*override def todoList: Seq[TodoEntity] = {
-    DB.withConnection { implicit  conn =>
-      SQL("SELECT id, text, finished, weight from public.todo order by weight").as(TodoEntity.fromDb.*)
-    }
+
+  import driver.api._
+
+
+  class Todos(tag: Tag) extends Table[Todo](tag, "todo") {
+    // Auto Increment the id primary key column
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+    def text = column[String]("text")
+
+    def finished = column[Boolean]("finished")
+
+    def weight = column[Int]("weight")
+    // the * projection (e.g. select * ...) auto-transforms the tupled
+    // column values to / from a User
+    def * = (id, text, finished, weight) <> ((Todo.apply _).tupled, Todo.unapply)
   }
 
-  override def findTodoById(id: Long): Option[TodoEntity] = {
-    DB.withConnection { implicit conn =>
-      SQL("SELECT id, text, finished, weight from public.todo where id = {id}").on(
-        'id -> id
-      ).as(TodoEntity.fromDb.singleOpt)
-    }
+
+  private val todos = TableQuery[Todos]
+
+  override def todoList: Future[Seq[Todo]]= {
+
+    val query = (for {
+      todo <- todos
+    } yield todo).sortBy(_.weight)
+
+    db.run( query.result )
 
   }
 
-  override def addTodo(entity: TodoEntity): Option[Long] = {
-    DB.withConnection { implicit conn =>
-      SQL("INSERT INTO public.todo(text, finished, weight) values({text},{finished},{weight})").on(
-        'text -> entity.text,
-        'finished -> entity.finished,
-        'weight -> entity.weight
-      ).executeInsert()
-    }
+  override def findTodoById(id: Long): Future[Option[Todo]] = {
+    db.run(todos.filter(_.id === id).result.headOption)
   }
 
-  override def updateTodo(entity: TodoEntity): Int = {
-    DB.withConnection { implicit conn =>
-      SQL("UPDATE public.todo set text={text}, finished={finished}, weight={weight} where id={id}").on(
-        'text -> entity.text,
-        'finished -> entity.finished,
-        'weight -> entity.weight,
-        'id -> entity.id
-      ).executeUpdate()
-    }
-  }*/
+  override def addTodo(entity: Todo): Future[Unit] = {
+    db.run(todos += entity).map( _ => () )
+  }
+
+  override def updateTodo(entity: Todo): Future[Unit] = {
+    db.run(todos.filter(_.id === entity.id).update(entity)).map(_ => ())
+  }
+
 }

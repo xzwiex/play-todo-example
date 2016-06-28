@@ -7,6 +7,7 @@ import model.service.ProfileService
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+
 import scala.concurrent.Future
 
 
@@ -32,30 +33,27 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
     def email = column[String]("email")
     // the * projection (e.g. select * ...) auto-transforms the tupled
     // column values to / from a User
-    def * = (id, email) <> (Profile.tupled, Profile.unapply)
+    def * = (id, email) <> ((Profile.apply _).tupled, Profile.unapply)
   }
-
 
 
   private val profiles = TableQuery[Profiles]
 
-  def findProfileById(id: Long) = {
+  def findProfileById(id: Long) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.id === id).result.headOption)
   }
 
-  def findProfileByEmail(email: String) = {
+  def findProfileByEmail(email: String) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.email === email).result.headOption)
   }
 
-  def createProfile(entity: SiteProfile) = {
+  def createProfile(entity: Profile) : Future[Any] = {
 
     findProfileByEmail(entity.email).flatMap {
       p =>  if( p.isEmpty ) {
-        db.run(profiles += Profile(entity.id, entity.email)).map( r => () )
+        db.run(profiles += entity).map( r => () )
       } else Future.successful(None)
     }
-
-
 
   }
 
