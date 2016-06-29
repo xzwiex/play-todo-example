@@ -1,21 +1,18 @@
 package controllers
 
-import be.objectify.deadbolt.scala.cache.HandlerCache
-import be.objectify.deadbolt.scala.{ActionBuilders, DeadboltActions}
+
 import com.google.inject.Inject
 import model.db.Todo
 import play.api.libs.json.Json
 import play.api.mvc._
+import security.Secured
 import services.TodoServiceImpl
 
-class TodoController @Inject() (
-                                 todoService: TodoServiceImpl,
-                                 deadbolt: DeadboltActions, handlers: HandlerCache, actionBuilder: ActionBuilders
-                                 ) extends Controller {
+class TodoController @Inject() ( todoService: TodoServiceImpl ) extends Controller with Secured  {
 
   implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  def todoList =  deadbolt.SubjectPresent()() { request =>
+  def todoList =  Action.async { request =>
       todoService.todoList.map {
         todos =>
           val json = Json.toJson(todos)
