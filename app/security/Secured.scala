@@ -13,7 +13,7 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.libs.json._
 
-import pdi.jwt._
+import pdi.jwt
 import pdi.jwt.JwtSession
 
 
