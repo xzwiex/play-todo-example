@@ -1,7 +1,6 @@
 package model.service
 
 import com.google.inject.ImplementedBy
-import model.TodoEntity
 import model.db.Todo
 import services.TodoServiceImpl
 

@@ -1,6 +1,7 @@
 package model
 
-import be.objectify.deadbolt.core.models.Role
+
+import be.objectify.deadbolt.scala.models.Role
 
 /**
  *
@@ -8,5 +9,5 @@ import be.objectify.deadbolt.core.models.Role
  */
 
 class SecurityRole(val roleName: String) extends Role  {
-  def getName: String = roleName
+  override def name: String = roleName
 }

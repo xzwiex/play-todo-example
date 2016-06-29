@@ -1,8 +1,8 @@
 package model
 
-import be.objectify.deadbolt.core.models.{Permission, Subject}
+
+import be.objectify.deadbolt.scala.models.{Permission, Role, Subject}
 import model.db.Profile
-import play.libs.Scala
 
 /**
  *
@@ -11,15 +11,11 @@ import play.libs.Scala
 
 class SiteProfile(val id: Long, val email: String) extends Subject  {
 
-  def getRoles: java.util.List[SecurityRole] = {
-    Scala.asJava(Seq.empty)
-  }
+  override def identifier: String = this.email
 
-  def getPermissions: java.util.List[UserPermission] = {
-    Scala.asJava(Seq.empty)
-  }
+  override def permissions: List[Permission] = List.empty
 
-  def getIdentifier: String = this.email
+  override def roles: List[Role] = List.empty
 }
 
 object SiteProfile {

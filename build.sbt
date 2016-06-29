@@ -4,7 +4,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
   jdbc,
@@ -13,10 +13,10 @@ libraryDependencies ++= Seq(
   specs2 % Test,
   /*"com.typesafe.slick" %% "slick" % "3.1.1",*/
   "com.typesafe.play" %% "play-slick" % "2.0.2",
-  "be.objectify" %% "deadbolt-scala" % "2.4.3"
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
 )
 
-pipelineStages := Seq(rjs)
+/*pipelineStages := Seq(rjs)*/
 
 resolvers += Resolver.url("Objectify Play Repository", url("http://deadbolt.ws/releases/"))(Resolver.ivyStylePatterns)
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

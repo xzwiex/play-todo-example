@@ -1,12 +1,11 @@
 package services
 
 import com.google.inject.Inject
-import model.SiteProfile
 import model.db.Profile
 import model.service.ProfileService
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
-import slick.driver.JdbcProfile
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import slick.driver.JdbcProfile
 
 import scala.concurrent.Future
 
@@ -39,15 +38,15 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
 
   private val profiles = TableQuery[Profiles]
 
-  def findProfileById(id: Long) : Future[Option[Profile]] = {
+  override def findProfileById(id: Long) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.id === id).result.headOption)
   }
 
-  def findProfileByEmail(email: String) : Future[Option[Profile]] = {
+  override def findProfileByEmail(email: String) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.email === email).result.headOption)
   }
 
-  def createProfile(entity: Profile) : Future[Any] = {
+  override def createProfile(entity: Profile) : Future[Any] = {
 
     findProfileByEmail(entity.email).flatMap {
       p =>  if( p.isEmpty ) {

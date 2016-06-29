@@ -13,14 +13,11 @@ import scala.concurrent.Future
  * Created by Dmitry on 13.02.2016.
  */
 
-
-
-
-
 class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   extends TodoService
     with HasDatabaseConfigProvider[JdbcProfile] {
 
+  implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
   import driver.api._
 

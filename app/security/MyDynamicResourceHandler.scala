@@ -1,6 +1,6 @@
 package security
 
-import be.objectify.deadbolt.scala.{DeadboltHandler, DynamicResourceHandler}
+import be.objectify.deadbolt.scala.{AuthenticatedRequest, DeadboltHandler, DynamicResourceHandler}
 import play.api.mvc.Request
 
 import scala.collection.immutable.Map
@@ -13,25 +13,21 @@ import scala.concurrent.Future
  */
 class MyDynamicResourceHandler extends DynamicResourceHandler
 {
-  def isAllowed[A](name: String, meta: String, handler: DeadboltHandler, request: Request[A]): Future[Boolean] = {
-    MyDynamicResourceHandler.handlers(name).isAllowed(name,
-                                                      meta,
-                                                      handler,
-                                                      request)
-  }
-
   // todo implement this when demonstrating permissions
   def checkPermission[A](permissionValue: String, deadboltHandler: DeadboltHandler, request: Request[A]): Future[Boolean] = Future(false)
+
+  override def isAllowed[A](name: String, meta: Option[Any],
+                            deadboltHandler: DeadboltHandler, request: AuthenticatedRequest[A]): Future[Boolean] = {
+    MyDynamicResourceHandler.handlers(name).isAllowed(name, meta,deadboltHandler, request)
+  }
+
+  override def checkPermission[A](permissionValue: String, meta: Option[Any],
+                                  deadboltHandler: DeadboltHandler, request: AuthenticatedRequest[A]): Future[Boolean] = {
+    Future.successful(true)
+  }
 }
 
 object MyDynamicResourceHandler {
   val handlers: Map[String, DynamicResourceHandler] =
-    Map(
-         "pureLuck" -> new DynamicResourceHandler() {
-           def isAllowed[A](name: String, meta: String, deadboltHandler: DeadboltHandler, request: Request[A]): Future[Boolean] =
-             Future(System.currentTimeMillis() % 2 == 0)
-
-           def checkPermission[A](permissionValue: String, deadboltHandler: DeadboltHandler, request: Request[A]): Future[Boolean] = Future(false)
-         }
-       )
+    Map( "pureLuck" -> new MyDynamicResourceHandler() )
 }

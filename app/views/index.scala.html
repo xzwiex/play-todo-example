@@ -1,5 +1,6 @@
-@(message: String, handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
 @import be.objectify.deadbolt.scala.views.html._
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: AuthenticatedRequest[Any])
 
 
 @main("Welcome to Play") {

@@ -1,9 +1,10 @@
 package security
 
-import be.objectify.deadbolt.scala.{DeadboltHandler, DynamicResourceHandler}
-import model.{SiteProfile, SiteProfile$}
+import be.objectify.deadbolt.scala.models.Subject
+import be.objectify.deadbolt.scala.{AuthenticatedRequest, DeadboltHandler, DynamicResourceHandler}
+import model.{SiteProfile}
 import play.api.mvc.{Request, Result, Results}
-import be.objectify.deadbolt.core.models.Subject
+
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent._
@@ -20,7 +21,7 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
     Future(dynamicResourceHandler.orElse(Some(new MyDynamicResourceHandler())))
   }
 
-  override def getSubject[A](request: Request[A]): Future[Option[Subject]] = {
+  def getSubject[A](request: AuthenticatedRequest[A]): Future[Option[Subject]] = {
 
     Future.successful(
       request.session.get("profileId").map { value =>
@@ -30,7 +31,7 @@ class MyDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] =
 
   }
 
-  def onAuthFailure[A](request: Request[A]): Future[Result] = {
+  override def onAuthFailure[A](request: AuthenticatedRequest[A]): Future[Result] = {
     Future {Results.Forbidden(views.html.accessFailed())}
   }
 }
