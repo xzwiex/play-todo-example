@@ -3,7 +3,7 @@
 # --- !Ups
 
 CREATE TABLE todo (
-    id IDENTITY,
+    id SERIAL,
     text VARCHAR(255),
     finished BOOLEAN,
     weight INT

@@ -3,7 +3,7 @@
 # --- !Ups
 
 CREATE TABLE profile (
-    id IDENTITY,
+    id SERIAL,
     email varchar(255)
 );
 

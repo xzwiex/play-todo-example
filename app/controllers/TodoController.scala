@@ -15,7 +15,7 @@ class TodoController @Inject() (
 
   implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  def todoList =  deadbolt.SubjectPresent()() { request =>
+  def todoList =  /*deadbolt.SubjectPresent()()*/ Action.async { request =>
       todoService.todoList.map {
         todos =>
           val json = Json.toJson(todos)
