@@ -12,9 +12,8 @@ libraryDependencies ++= Seq(
   ws,
   specs2 % Test,
   /*"com.typesafe.slick" %% "slick" % "3.1.1",*/
-  "com.pauldijou" %% "jwt-play" % "0.7.1",
-  "com.typesafe.play" %% "play-slick" % "2.0.2"/*,
-  "be.objectify" %% "deadbolt-scala" % "2.5.0"*/
+  "com.typesafe.play" %% "play-slick" % "2.0.2",
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
 )
 
 /*pipelineStages := Seq(rjs)*/

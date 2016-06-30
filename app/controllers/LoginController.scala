@@ -1,17 +1,21 @@
 package controllers
 
-
+import be.objectify.deadbolt.scala.cache.HandlerCache
 import com.google.inject.Inject
+import model.SiteProfile$
 import model.db.Profile
 import play.api.Logger
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.libs.ws.{WS, WSClient, WSResponse}
 import play.api.mvc._
+import play.api.Play.current
 import services.ProfileServiceImpl
 
 import scala.concurrent.Future
 
-class LoginController @Inject() ( profileService: ProfileServiceImpl,
+class LoginController @Inject() (
+                                  handlers: HandlerCache,
+                                  profileService: ProfileServiceImpl,
                                   ws: WSClient) extends Controller {
 
   implicit val context = scala.concurrent.ExecutionContext.Implicits.global
