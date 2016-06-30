@@ -25,7 +25,7 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
   import driver.api._
 
 
-  class Profiles(tag: Tag) extends Table[Profile](tag, "profile") {
+  class Profiles(tag: Tag) extends Table[Profile](tag, "public.profile") {
     // Auto Increment the id primary key column
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     // The name can't be null

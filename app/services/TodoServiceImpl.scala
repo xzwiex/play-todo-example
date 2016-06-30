@@ -22,7 +22,7 @@ class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigPr
   import driver.api._
 
 
-  class Todos(tag: Tag) extends Table[Todo](tag, "todo") {
+  class Todos(tag: Tag) extends Table[Todo](tag, "public.todo") {
     // Auto Increment the id primary key column
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
