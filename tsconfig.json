@@ -11,8 +11,7 @@
     "node_modules"
   ],
   "awesomeTypescriptLoaderOptions": {
-    "forkChecker": true,
-    "useWebpackText": true
+    "forkChecker": true
   },
   "compileOnSave": false,
   "buildOnSave": false,

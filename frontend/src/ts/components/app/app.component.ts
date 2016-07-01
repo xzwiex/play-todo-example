@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 
-let template = require('to-string!./app.template');
-
 @Component({
-    selector : 'my-app',
-    template : template
+  selector: 'my-app',
+  template: require('./app.template')
 })
 export class AppComponent { }
