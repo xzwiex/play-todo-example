@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '/';
+import { UserService } from 'services/user.service/user.service';
 
 @Component({
   selector: 'my-app',
   template: require('./app.template'),
-  providers : [HttpClient]
+  providers : [UserService]
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private userService: UserService) {
+    userService.getUserInfo();
+  }
 }

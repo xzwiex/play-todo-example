@@ -1,3 +1,3 @@
-class UserInfo {
+export class UserInfo {
     authorized : Boolean
 }

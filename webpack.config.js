@@ -1,6 +1,8 @@
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+/*
 var webpack = require("webpack");
 var nodeEnvironment = process.env.NODE_ENV
+*/
 
 var config = {
   context: __dirname,
@@ -9,6 +11,7 @@ var config = {
     'app' :  './frontend/src/ts/index.ts' ,
     'polyfills' : './frontend/src/ts/polyfills.ts'
   },
+  devtool: 'source-map',
   resolve: {
     extensions: ['', '.js', '.ts',  '.tpl.html', '.css', '.less'],
     modulesDirectories: [".", "components", "node_modules"]
@@ -21,7 +24,7 @@ var config = {
     loaders: [
       { test: /\.tpl.html/, loader: 'html'},
       { test: /\.ts$/, loader: 'awesome-typescript' },
-      { test: /\.js$/, loader: 'babel', exclude: /node_modules/ },
+      /*{ test: /\.js$/, loader: 'babel', exclude: /node_modules/ },*/
       // Extract css files
       { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader") },
       // Optionally extract less files

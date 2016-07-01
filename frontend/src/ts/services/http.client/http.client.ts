@@ -3,6 +3,9 @@ import {Http, Headers} from '@angular/http';
 
 @Injectable()
 export class HttpClient {
+
+    private baseUrl : String = 'http://localhost:9000';
+
     constructor(private http: Http) {}
 
     createAuthorizationHeader(headers:Headers) {
@@ -11,9 +14,12 @@ export class HttpClient {
     }
 
     get(url) {
+
+        console.debug( `Get URL: ${url}` );
+
         let headers = new Headers();
         this.createAuthorizationHeader(headers);
-        return this.http.get(url, {
+        return this.http.get(`${this.baseUrl}${url}`, {
             headers: headers
         });
     }
