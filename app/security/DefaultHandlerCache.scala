@@ -11,9 +11,9 @@ import play.Configuration
  * @author Steve Chaloner (steve@objectify.be)
  */
 @Singleton
-class MyHandlerCache @Inject() (implicit val configuration: Configuration) extends HandlerCache {
+class DefaultHandlerCache @Inject() (implicit val configuration: Configuration) extends HandlerCache {
 
-  val defaultHandler: DeadboltHandler = new MyDeadboltHandler
+  val defaultHandler: DeadboltHandler = new DefaultDeadboltHandler
 
   override def apply(): DeadboltHandler = defaultHandler
 

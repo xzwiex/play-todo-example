@@ -6,7 +6,7 @@ import play.api.libs.json.Json
   * Created by xzwiex on 26.06.16.
   */
 
-case class Profile(id: Long, email: String )
+case class Profile(id: Long, email: String, name : String )
 
 object Profile {
   implicit val fmt = Json.format[Profile]

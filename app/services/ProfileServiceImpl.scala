@@ -25,14 +25,16 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
   import driver.api._
 
 
-  class Profiles(tag: Tag) extends Table[Profile](tag, "public.profile") {
+  class Profiles(tag: Tag) extends Table[Profile](tag, "profile") {
     // Auto Increment the id primary key column
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     // The name can't be null
     def email = column[String]("email")
+
+    def name = column[String]("name")
     // the * projection (e.g. select * ...) auto-transforms the tupled
     // column values to / from a User
-    def * = (id, email) <> ((Profile.apply _).tupled, Profile.unapply)
+    def * = (id, email, name) <> ((Profile.apply _).tupled, Profile.unapply)
   }
 
 

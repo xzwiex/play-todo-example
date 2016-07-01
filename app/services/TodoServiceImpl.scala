@@ -6,6 +6,7 @@ import model.service.TodoService
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 
+
 import scala.concurrent.Future
 
 
@@ -28,6 +29,8 @@ class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigPr
 
     def text = column[String]("text")
 
+    def profileId = column[Int]("profile_id")
+
     def finished = column[Boolean]("finished")
 
     def weight = column[Int]("weight")
@@ -39,11 +42,13 @@ class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigPr
 
   private val todos = TableQuery[Todos]
 
-  override def todoList: Future[Seq[Todo]]= {
+  override def todoList(profileId: Option[Int] = None): Future[Seq[Todo]]= {
 
     val query = (for {
       todo <- todos
-    } yield todo).sortBy(_.weight)
+    } yield todo).filter {
+      todo => profileId.map( todo.profileId === _ ).getOrElse(true:Rep[Boolean])
+    }.sortBy(_.weight)
 
     db.run( query.result )
 

@@ -11,14 +11,14 @@ import scala.concurrent.Future
  *
  * @author Steve Chaloner (steve@objectify.be)
  */
-class MyDynamicResourceHandler extends DynamicResourceHandler
+class DefaultDynamicResourceHandler extends DynamicResourceHandler
 {
   // todo implement this when demonstrating permissions
   def checkPermission[A](permissionValue: String, deadboltHandler: DeadboltHandler, request: Request[A]): Future[Boolean] = Future(false)
 
   override def isAllowed[A](name: String, meta: Option[Any],
                             deadboltHandler: DeadboltHandler, request: AuthenticatedRequest[A]): Future[Boolean] = {
-    MyDynamicResourceHandler.handlers(name).isAllowed(name, meta,deadboltHandler, request)
+    DefaultDynamicResourceHandler.handlers(name).isAllowed(name, meta,deadboltHandler, request)
   }
 
   override def checkPermission[A](permissionValue: String, meta: Option[Any],
@@ -27,7 +27,7 @@ class MyDynamicResourceHandler extends DynamicResourceHandler
   }
 }
 
-object MyDynamicResourceHandler {
+object DefaultDynamicResourceHandler {
   val handlers: Map[String, DynamicResourceHandler] =
-    Map( "pureLuck" -> new MyDynamicResourceHandler() )
+    Map( "pureLuck" -> new DefaultDynamicResourceHandler() )
 }

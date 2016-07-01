@@ -9,11 +9,13 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WS, WSClient, WSResponse}
 import play.api.mvc._
 import play.api.Play.current
+import security.JWTService
 import services.ProfileServiceImpl
 
 import scala.concurrent.Future
 
 class LoginController @Inject() (
+                                  jWTService: JWTService,
                                   handlers: HandlerCache,
                                   profileService: ProfileServiceImpl,
                                   ws: WSClient) extends Controller {
@@ -31,31 +33,24 @@ class LoginController @Inject() (
       .get()
 
 
-    val result = uloginRequest.flatMap {
+    uloginRequest.flatMap {
       response =>
-
         val email  = (response.json \ "email").as[String]
-
         profileService.findProfileByEmail(email).flatMap {
           profile =>
-
             profile.map(Future.successful).getOrElse {
 
-              profileService.createProfile(new Profile(0, email))
+              profileService.createProfile(new Profile(0, email, "Unknown name"))
                 .flatMap {
-                  r => profileService.findProfileByEmail(email)
-                    .map(_.getOrElse( throw new RuntimeException("db error")))
-                }
+                r => profileService.findProfileByEmail(email)
+                  .map(_.getOrElse( throw new RuntimeException("db error")))
+              }
 
             }
         }
-
-
+    }.map { profile =>
+      jWTService.signResult(Ok(Json.toJson(Map("profile" -> profile.email))), profile)
     }
-
-    result.map(profile =>
-      Ok(Json.toJson(Map("profile" -> profile.email))).withSession("profileId" -> profile.id.toString)
-    )
 
   }
 
