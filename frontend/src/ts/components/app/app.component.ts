@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import { HttpClient } from '/';
 
 @Component({
   selector: 'my-app',
-  template: require('./app.template')
+  template: require('./app.template'),
+  providers : [HttpClient]
 })
-export class AppComponent { }
+export class AppComponent {
+  constructor() {}
+}

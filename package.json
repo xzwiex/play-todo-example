@@ -4,6 +4,7 @@
   "scripts": {
     "start": "webpack-dev-server -d --colors --port 8000",
     "build": "webpack -p",
+    "watcher": "webpack -p --watch",
     "test": "karma start --auto-watch"
   },
   "license": "ISC",
