@@ -18,10 +18,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "2.0.2",
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.2",
   "com.pauldijou" %% "jwt-play-json" % "0.7.1",
-  "be.objectify" %% "deadbolt-scala" % "2.5.0",
-  "org.webjars" %% "webjars-play" % "2.4.0-1",
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
+  /*"org.webjars" %% "webjars-play" % "2.4.0-1",
   "org.webjars" % "angularjs" % "1.5.0",
-  "org.webjars" % "bootstrap" % "3.3.6"
+  "org.webjars" % "bootstrap" % "3.3.6"*/
 )
 
 /*pipelineStages := Seq(rjs)*/

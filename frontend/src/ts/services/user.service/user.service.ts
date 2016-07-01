@@ -8,16 +8,19 @@ import { UserInfo }     from '../../model/user.info';
 @Injectable()
 export class UserService {
 
+    private userInfo: UserInfo;
+
     constructor( private http: HttpClient ) {}
 
     getUserInfo() : Observable<UserInfo> {
-        return this.http.get("/user-info")
-            .map( (responseData: Response) => {
-                let json = responseData.json();
-                console.log(json);
 
-                return new UserInfo();
-            })
+
+        return this.http.get("/user-info").map( (responseData: Response) => {
+                let userInfo = responseData.json();
+                this.userInfo = userInfo;
+
+                return userInfo;
+            });
 
     }
 

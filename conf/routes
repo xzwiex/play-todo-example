@@ -13,3 +13,5 @@ PUT         /todo/add             controllers.TodoController.addEntry
 POST        /todo/update          controllers.TodoController.updateEntry
 
 GET         /ulogin/:token        controllers.LoginController.ulogin(token)
+
+GET         /user-info            controllers.UserInfoController.userInfo

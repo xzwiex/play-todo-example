@@ -3,6 +3,7 @@ package model
 
 import be.objectify.deadbolt.scala.models.{Permission, Role, Subject}
 import model.db.Profile
+import play.api.libs.json.Json
 
 /**
  *
@@ -28,4 +29,11 @@ object SiteProfile {
 
 class UserPermission(val value: String) extends Permission {
   def getValue: String = value
+}
+
+
+case class UserInfo(authorized: Boolean)
+
+object UserInfo {
+  implicit val fmt = Json.format[UserInfo]
 }
