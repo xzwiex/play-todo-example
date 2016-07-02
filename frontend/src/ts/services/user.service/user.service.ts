@@ -13,14 +13,11 @@ export class UserService {
     constructor( private http: HttpClient ) {}
 
     getUserInfo() : Observable<UserInfo> {
-
-
         return this.http.get("/user-info").map( (responseData: Response) => {
-                let userInfo = responseData.json();
-                this.userInfo = userInfo;
+            this.userInfo = responseData.json();
 
-                return userInfo;
-            });
+            return this.userInfo = responseData.json();
+        });
 
     }
 

@@ -7,15 +7,16 @@ import model.db.Todo
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.TodoServiceImpl
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class TodoController @Inject() (
                                  todoService: TodoServiceImpl,
                                  deadbolt: DeadboltActions, handlers: HandlerCache, actionBuilder: ActionBuilders
                                  ) extends Controller {
 
-  implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  def todoList =  /*deadbolt.SubjectPresent()()*/ Action.async { request =>
+  def todoList =  deadbolt.SubjectPresent()() { request =>
       todoService.todoList(None).map {
         todos =>
           val json = Json.toJson(todos)

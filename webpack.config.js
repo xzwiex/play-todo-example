@@ -22,7 +22,7 @@ var config = {
   },
   module: {
     loaders: [
-      { test: /\.tpl.html/, loader: 'html'},
+      { test: /\.tpl.html/, loader: 'html?attrs=false'},
       { test: /\.ts$/, loader: 'awesome-typescript' },
       /*{ test: /\.js$/, loader: 'babel', exclude: /node_modules/ },*/
       // Extract css files

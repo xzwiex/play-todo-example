@@ -11,12 +11,11 @@
         <link rel="stylesheet" href='@routes.Assets.versioned("lib/bootstrap/css/bootstrap-theme.css")'>
     </head>
     <body>
-
-
-
         <my-app>Loading...</my-app>
-        @content
-
+        @*
+        @content*/
+        *@
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
         <script src="@routes.Assets.versioned("javascripts/polyfills.bundle.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/vendor.bundle.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/app.bundle.js")"></script>

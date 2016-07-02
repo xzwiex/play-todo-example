@@ -1,3 +1,4 @@
-export class UserInfo {
-    authorized : Boolean
+export interface UserInfo {
+    authorized : Boolean;
+    token? : string;
 }
