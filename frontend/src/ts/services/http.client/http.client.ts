@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Http, Headers, Response} from '@angular/http';
+import {Http, Headers, Response, URLSearchParams} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 @Injectable()
@@ -14,14 +14,21 @@ export class HttpClient {
             btoa('username:password'));
     }
 
-    get( url : string ) : Observable<Response> {
+    get( url : string, params : Map<String, any> = new Map() ) : Observable<Response> {
 
         console.debug( 'Get URL:', url );
+
+        const search = new URLSearchParams();
+
+        params.forEach( (v: any, idx: string, map: Map<string, any>) => {
+            params.set(idx, v);
+        });
 
         let headers = new Headers();
         this.createAuthorizationHeader(headers);
         return this.http.get( this.baseUrl + url, {
-            headers: headers
+            headers: headers,
+            search : search
         }).catch(this.handleError);
     }
 

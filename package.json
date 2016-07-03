@@ -4,7 +4,7 @@
   "scripts": {
     "start": "webpack-dev-server -d --colors --port 8000",
     "build": "webpack -p",
-    "watcher": "webpack -p --watch",
+    "watcher": "webpack --progress --profile --colors --display-error-details --display-cached --watch",
     "test": "karma start --auto-watch"
   },
   "license": "ISC",
@@ -29,20 +29,26 @@
     "zone.js": "^0.6.12"
   },
   "devDependencies": {
+    "angular2-template-loader": "^0.4.0",
     "awesome-typescript-loader": "^1.1.1",
     "concurrently": "^2.0.0",
+    "copy-webpack-plugin": "^3.0.1",
     "es6-promise": "^3.2.1",
     "es6-shim": "^0.35.1",
     "es7-reflect-metadata": "^1.6.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.22.0",
     "lite-server": "^2.2.0",
+    "raw-loader": "^0.5.1",
+    "source-map-loader": "^0.1.5",
     "ts-helpers": "^1.1.1",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
     "typings": "^1.0.4",
     "webpack": "^1.13.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+    "webpack-merge": "^0.14.0"
   }
 }

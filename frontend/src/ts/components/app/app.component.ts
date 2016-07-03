@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service/user.service';
-import { GoogleSignIn } from '../google-sign-in/google-sign-in'
+import { GoogleSignIn } from '../google-sign-in/google-sign-in.component'
 import {UserInfo} from "../../model/user.info";
 import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'my-app',
-  template: /*require('./app.template')*/ '<div *ngIf="userInfo?.authorized"><google-sign-in></google-sign-in></div>',
+  templateUrl: './app.template.html',
   directives : [GoogleSignIn, NgIf],
   providers : [UserService]
 })

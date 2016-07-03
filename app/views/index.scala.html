@@ -1,9 +1,9 @@
 @import be.objectify.deadbolt.scala.AuthenticatedRequest
 @import be.objectify.deadbolt.scala.views.html._
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: AuthenticatedRequest[Any])
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler, googleClientId : String)(implicit request: AuthenticatedRequest[Any])
 
 
-@main("Welcome to Play") {
+@main("Welcome to Play", googleClientId) {
 
 	@subjectPresentOr(handler) {
 

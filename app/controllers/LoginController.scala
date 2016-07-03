@@ -54,4 +54,39 @@ class LoginController @Inject() (
 
   }
 
+  def googleLogin(token: String) = Action.async { implicit request =>
+
+    Logger.debug(s"Fetch google data for token $token")
+
+    val uloginRequest: Future[WSResponse] = ws
+      .url("https://www.googleapis.com/oauth2/v3/tokeninfo")
+      .withQueryString("id_token" -> token)
+      .get()
+
+
+    uloginRequest.map {
+      response =>
+
+        Logger.debug(s"response: ${response.json}")
+        /*val email  = (response.json \ "email").as[String]
+        profileService.findProfileByEmail(email).flatMap {
+          profile =>
+            profile.map(Future.successful).getOrElse {
+
+              profileService.createProfile(new Profile(0, email, "Unknown name"))
+                .flatMap {
+                  r => profileService.findProfileByEmail(email)
+                    .map(_.getOrElse( throw new RuntimeException("db error")))
+                }
+
+            }
+        }*/
+
+        Ok(Json.toJson(Map("profile" -> "OK")))
+    }/*.map { profile =>
+      jWTService.signResult(Ok(Json.toJson(Map("profile" -> profile.email))), profile)
+    }*/
+
+  }
+
 }
