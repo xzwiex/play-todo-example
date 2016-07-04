@@ -14,7 +14,7 @@ import scala.concurrent._
  * @author Steve Chaloner (steve@objectify.be)
  */
 class DefaultDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandler] = None)
-                       (implicit val configuration: Configuration) extends DeadboltHandler {
+                       (implicit val jwtService: JWTService) extends DeadboltHandler {
 
   def beforeAuthCheck[A](request: Request[A]) = Future(None)
 
@@ -24,13 +24,12 @@ class DefaultDeadboltHandler(dynamicResourceHandler: Option[DynamicResourceHandl
 
   def getSubject[A](request: AuthenticatedRequest[A]): Future[Option[Subject]] = {
 
-    //JwtJson.decode()
-    //Logger.debug(s"JWT key: ${configuration.getString("app.jwt.key")}")
+
     Future.successful(
-      
-      request.session.get("profileId").map { value =>
-        new SiteProfile(value.toInt, value)
+      request.headers.get("Authorization").flatMap { header =>
+        jwtService.decode( header.replace("Bearer ", "") ).map( p => SiteProfile.fromJwt(p.profile))
       }
+
     )
 
   }

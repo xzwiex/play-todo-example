@@ -2,19 +2,31 @@ import {Injectable} from '@angular/core';
 import {Http, Headers, Response, URLSearchParams} from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
+const LOCALSTORAGE_KEY = 'todo_token';
+
+
+
 @Injectable()
 export class HttpClient {
 
     private baseUrl : string = 'http://localhost:9000';
 
-    constructor(private http: Http) {}
+    private authToken: string;
 
-    createAuthorizationHeader(headers:Headers) {
-        headers.append('Authorization', 'Basic ' +
-            btoa('username:password'));
+    constructor(private http: Http) {
+
+        this.authToken = (localStorage.getItem(LOCALSTORAGE_KEY) || '').toString();
     }
 
-    get( url : string, params : Map<String, any> = new Map() ) : Observable<Response> {
+    createAuthorizationHeader(headers:Headers) {
+
+        if (this.authToken) {
+            headers.append('Authorization', 'Bearer ' + this.authToken);
+        }
+
+    }
+
+    get( url : string, params : Map<string, any> = new Map<string, any>() ) : Observable<Response> {
 
         console.debug( 'Get URL:', url );
 
@@ -26,6 +38,7 @@ export class HttpClient {
 
         let headers = new Headers();
         this.createAuthorizationHeader(headers);
+        
         return this.http.get( this.baseUrl + url, {
             headers: headers,
             search : search
@@ -39,6 +52,13 @@ export class HttpClient {
             headers: headers
         });
     }
+
+    setAuthToken(token: string):void {
+        this.authToken = token;
+        localStorage.setItem(LOCALSTORAGE_KEY, token);
+    }
+
+
 
     private handleError (error: any) {
         // In a real world app, we might use a remote logging infrastructure

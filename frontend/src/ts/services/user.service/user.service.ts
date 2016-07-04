@@ -11,26 +11,30 @@ export class UserService {
 
     private userInfo: UserInfo;
 
+
     constructor( private http: HttpClient ) {}
 
+    private handleUserInfoResponse(response : Response): UserInfo {
+
+        this.userInfo = response.json();
+
+        if (this.userInfo.token) {
+            this.http.setAuthToken( this.userInfo.token );
+        }
+
+        return this.userInfo;
+    }
+
     getUserInfo() : Observable<UserInfo> {
-        return this.http.get("/user-info").map( (responseData: Response) => {
-            this.userInfo = responseData.json();
-
-            return this.userInfo = responseData.json();
-        });
-
+        return this.http.get("/user-info").map( (reponse: Response) => this.handleUserInfoResponse(reponse) );
     }
 
 
-    authUser(token:string) : Subscription {
-        return this.http.get(`/login/${token}`).subscribe(
-            (response : Response) => {
-                console.log(response);
-                return response;
-            },
-            (error) => console.error(error)
+    authUser(token:string) : Observable<UserInfo> {
+        return this.http.get('/login/' + token).map(
+            (response : Response) => this.handleUserInfoResponse(response)
         );
     }
 
+   
 }

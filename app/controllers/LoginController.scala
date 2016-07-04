@@ -2,13 +2,12 @@ package controllers
 
 import be.objectify.deadbolt.scala.cache.HandlerCache
 import com.google.inject.Inject
-import model.SiteProfile$
+import model.{SiteProfile, UserInfo}
 import model.db.Profile
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.libs.ws.{WS, WSClient, WSResponse}
 import play.api.mvc._
-import play.api.Play.current
 import security.JWTService
 import services.ProfileServiceImpl
 
@@ -22,7 +21,7 @@ class LoginController @Inject() (
 
   implicit val context = scala.concurrent.ExecutionContext.Implicits.global
 
-  /*Todo*/
+ /* /*Todo*/
   def ulogin(token: String) = Action.async { implicit request =>
 
     Logger.debug(s"Fetch ulogin data for token $token")
@@ -52,7 +51,7 @@ class LoginController @Inject() (
       jWTService.signResult(Ok(Json.toJson(Map("profile" -> profile.email))), profile)
     }
 
-  }
+  }*/
 
   def googleLogin(token: String) = Action.async { implicit request =>
 
@@ -64,11 +63,11 @@ class LoginController @Inject() (
       .get()
 
 
-    uloginRequest.map {
+    uloginRequest.flatMap {
       response =>
 
         Logger.debug(s"response: ${response.json}")
-        /*val email  = (response.json \ "email").as[String]
+        val email  = (response.json \ "email").as[String]
         profileService.findProfileByEmail(email).flatMap {
           profile =>
             profile.map(Future.successful).getOrElse {
@@ -80,12 +79,12 @@ class LoginController @Inject() (
                 }
 
             }
-        }*/
+        }
 
-        Ok(Json.toJson(Map("profile" -> "OK")))
-    }/*.map { profile =>
-      jWTService.signResult(Ok(Json.toJson(Map("profile" -> profile.email))), profile)
-    }*/
+
+    }.map { profile =>
+      Ok(Json.toJson( UserInfo(true, Some( jWTService.encode(SiteProfile.fromDto(profile)) )) ))
+    }
 
   }
 

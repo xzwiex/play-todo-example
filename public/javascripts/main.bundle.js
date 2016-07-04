@@ -2222,14 +2222,17 @@ webpackJsonpac__name_([2],[
 	var core_1 = __webpack_require__(2);
 	var http_1 = __webpack_require__(224);
 	var Rx_1 = __webpack_require__(541);
+	var LOCALSTORAGE_KEY = 'todo_token';
 	var HttpClient = (function () {
 	    function HttpClient(http) {
 	        this.http = http;
 	        this.baseUrl = 'http://localhost:9000';
+	        this.authToken = (localStorage.getItem(LOCALSTORAGE_KEY) || '').toString();
 	    }
 	    HttpClient.prototype.createAuthorizationHeader = function (headers) {
-	        headers.append('Authorization', 'Basic ' +
-	            btoa('username:password'));
+	        if (this.authToken) {
+	            headers.append('Authorization', 'Bearer ' + this.authToken);
+	        }
 	    };
 	    HttpClient.prototype.get = function (url, params) {
 	        if (params === void 0) { params = new Map(); }
@@ -2251,6 +2254,10 @@ webpackJsonpac__name_([2],[
 	        return this.http.post(url, data, {
 	            headers: headers
 	        });
+	    };
+	    HttpClient.prototype.setAuthToken = function (token) {
+	        this.authToken = token;
+	        localStorage.setItem(LOCALSTORAGE_KEY, token);
 	    };
 	    HttpClient.prototype.handleError = function (error) {
 	        // In a real world app, we might use a remote logging infrastructure
@@ -2281,18 +2288,20 @@ webpackJsonpac__name_([2],[
 	    function UserService(http) {
 	        this.http = http;
 	    }
+	    UserService.prototype.handleUserInfoResponse = function (response) {
+	        this.userInfo = response.json();
+	        if (this.userInfo.token) {
+	            this.http.setAuthToken(this.userInfo.token);
+	        }
+	        return this.userInfo;
+	    };
 	    UserService.prototype.getUserInfo = function () {
 	        var _this = this;
-	        return this.http.get("/user-info").map(function (responseData) {
-	            _this.userInfo = responseData.json();
-	            return _this.userInfo = responseData.json();
-	        });
+	        return this.http.get("/user-info").map(function (reponse) { return _this.handleUserInfoResponse(reponse); });
 	    };
 	    UserService.prototype.authUser = function (token) {
-	        return this.http.get("/login/" + token).subscribe(function (response) {
-	            console.log(response);
-	            return response;
-	        }, function (error) { return console.error(error); });
+	        var _this = this;
+	        return this.http.get('/login/' + token).map(function (response) { return _this.handleUserInfoResponse(response); });
 	    };
 	    UserService = __decorate([
 	        core_1.Injectable(), 
@@ -4700,18 +4709,35 @@ webpackJsonpac__name_([2],[
 	var AppComponent = (function () {
 	    function AppComponent(userService) {
 	        this.userService = userService;
+	        this.userInfo = { authorized: false };
 	    }
 	    AppComponent.prototype.ngOnInit = function () {
+	        console.debug('Init MyApp');
+	        this.signInCallback = this.onGoogleAuthorized.bind(this);
+	        this.getUserInfo();
+	    };
+	    AppComponent.prototype.getUserInfo = function () {
 	        var _this = this;
-	        console.log('Init MyApp');
-	        this.userService.getUserInfo().subscribe(function (userInfo) { return _this.userInfo = userInfo; }, function (error) { return console.log(error); });
+	        this.userService.getUserInfo().subscribe(function (userInfo) { return _this.handleUserInfo(userInfo); }, this.requestErrorHandler);
+	    };
+	    AppComponent.prototype.handleUserInfo = function (userInfo) {
+	        this.userInfo = userInfo;
+	    };
+	    AppComponent.prototype.requestErrorHandler = function (error) {
+	        console.error(error);
+	    };
+	    AppComponent.prototype.onGoogleAuthorized = function (user) {
+	        var _this = this;
+	        var token = user.getAuthResponse().id_token;
+	        this.userService.authUser(token).subscribe(function (userInfo) { return _this.handleUserInfo(userInfo); }, this.requestErrorHandler);
 	    };
 	    AppComponent = __decorate([
 	        core_1.Component({
 	            selector: 'my-app',
 	            template: __webpack_require__(536),
 	            directives: [google_sign_in_component_1.GoogleSignIn, common_1.NgIf],
-	            providers: [user_service_1.UserService]
+	            providers: [user_service_1.UserService],
+	            pipes: [common_1.JsonPipe]
 	        }), 
 	        __metadata('design:paramtypes', [(typeof (_a = typeof user_service_1.UserService !== 'undefined' && user_service_1.UserService) === 'function' && _a) || Object])
 	    ], AppComponent);
@@ -4727,19 +4753,9 @@ webpackJsonpac__name_([2],[
 
 	"use strict";
 	var core_1 = __webpack_require__(2);
-	var user_service_1 = __webpack_require__(367);
 	var GoogleSignIn = (function () {
-	    function GoogleSignIn(userService) {
-	        this.userService = userService;
+	    function GoogleSignIn() {
 	    }
-	    GoogleSignIn.prototype.generateId = function (length) {
-	        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	        var result = '';
-	        for (var i = length; i > 0; --i) {
-	            result += chars[Math.floor(Math.random() * chars.length)];
-	        }
-	        return result;
-	    };
 	    GoogleSignIn.prototype.ngOnInit = function () {
 	        this.id = "gbutton-" + this.generateId(8);
 	        console.log(gapi);
@@ -4750,37 +4766,42 @@ webpackJsonpac__name_([2],[
 	        gapi.load('auth2', function () {
 	            // Retrieve the singleton for the GoogleAuth library and set up the client.
 	            _this.auth = gapi.auth2.init({
-	                client_id: _this.googleId,
-	                cookiepolicy: 'single_host_origin',
+	                /*  client_id: this.googleId,*/
+	                cookie_policy: 'single_host_origin',
 	            });
 	            _this.attachSignin(document.getElementById(_this.id));
 	        });
 	    };
 	    GoogleSignIn.prototype.onAuth = function (user) {
-	        var token = user.getAuthResponse().id_token;
-	        this.userService.authUser(token);
+	        this.onAuthCallback(user);
 	    };
 	    GoogleSignIn.prototype.attachSignin = function (element) {
-	        console.log(element.id);
-	        this.auth.attachClickHandler(element, {}, this.onAuth.bind(this), function (error) {
+	        var _this = this;
+	        this.auth.attachClickHandler(element, {}, function (user) { return _this.onAuth(user); }, function (error) {
 	            console.error(JSON.stringify(error, undefined, 2));
 	        });
 	    };
+	    GoogleSignIn.prototype.generateId = function (length) {
+	        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	        var result = '';
+	        for (var i = length; i > 0; --i) {
+	            result += chars[Math.floor(Math.random() * chars.length)];
+	        }
+	        return result;
+	    };
 	    __decorate([
-	        core_1.Input('google-id'), 
-	        __metadata('design:type', String)
-	    ], GoogleSignIn.prototype, "googleId", void 0);
+	        core_1.Input('on-auth'), 
+	        __metadata('design:type', Object)
+	    ], GoogleSignIn.prototype, "onAuthCallback", void 0);
 	    GoogleSignIn = __decorate([
 	        core_1.Component({
 	            selector: 'google-sign-in',
 	            template: __webpack_require__(537),
 	            host: { '[id]': 'id' },
-	            providers: [user_service_1.UserService]
 	        }), 
-	        __metadata('design:paramtypes', [(typeof (_a = typeof user_service_1.UserService !== 'undefined' && user_service_1.UserService) === 'function' && _a) || Object])
+	        __metadata('design:paramtypes', [])
 	    ], GoogleSignIn);
 	    return GoogleSignIn;
-	    var _a;
 	}());
 	exports.GoogleSignIn = GoogleSignIn;
 	
@@ -4804,7 +4825,7 @@ webpackJsonpac__name_([2],[
 /* 536 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n    <h1>My First Angular 2 App</h1>\n    <div *ngIf=\"!userInfo?.authorized\">\n        <google-sign-in></google-sign-in>\n    </div>\n</div>"
+	module.exports = "<div>\n    <h1>My First Angular 2 App {{userInfo | json}}</h1>\n    <div *ngIf=\"userInfo && !userInfo.authorized\">\n        <google-sign-in [on-auth]=\"signInCallback\"></google-sign-in>\n    </div>\n    <div *ngIf=\"userInfo?.authorized\">\n        Welcome, User!\n    </div>\n</div>"
 
 /***/ },
 /* 537 */

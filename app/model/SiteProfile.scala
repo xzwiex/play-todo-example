@@ -2,7 +2,7 @@ package model
 
 
 import be.objectify.deadbolt.scala.models.{Permission, Role, Subject}
-import model.db.Profile
+import model.db.{JwtProfile, Profile}
 import play.api.libs.json.Json
 
 /**
@@ -24,6 +24,10 @@ object SiteProfile {
     new SiteProfile(dto.id, dto.email)
   }
 
+  def fromJwt(jwt:JwtProfile) = {
+    new SiteProfile(jwt.id, jwt.email)
+  }
+
 }
 
 
@@ -32,7 +36,7 @@ class UserPermission(val value: String) extends Permission {
 }
 
 
-case class UserInfo(authorized: Boolean)
+case class UserInfo(authorized: Boolean, token: Option[String] = None)
 
 object UserInfo {
   implicit val fmt = Json.format[UserInfo]
