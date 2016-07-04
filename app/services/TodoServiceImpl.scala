@@ -29,20 +29,23 @@ class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigPr
 
     def text = column[String]("text")
 
-    def profileId = column[Int]("profile_id")
+    def profileId = column[Long]("profile_id")
 
     def finished = column[Boolean]("finished")
 
     def weight = column[Int]("weight")
     // the * projection (e.g. select * ...) auto-transforms the tupled
     // column values to / from a User
-    def * = (id, text, finished, weight) <> ((Todo.apply _).tupled, Todo.unapply)
+    def * = (id, text, finished, weight, profileId) <> ((Todo.apply _).tupled, Todo.unapply)
   }
 
 
   private val todos = TableQuery[Todos]
 
-  override def todoList(profileId: Option[Int] = None): Future[Seq[Todo]]= {
+  private val insertQuery = todos returning todos.map(_.id) into ((item, id) => item.copy(id = id))
+
+
+  override def todoList(profileId: Option[Long] = None): Future[Seq[Todo]]= {
 
     val query = (for {
       todo <- todos
@@ -58,8 +61,9 @@ class TodoServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfigPr
     db.run(todos.filter(_.id === id).result.headOption)
   }
 
-  override def addTodo(entity: Todo): Future[Unit] = {
-    db.run(todos += entity).map( _ => () )
+  override def addTodo(entity: Todo): Future[Todo] = {
+    val action = insertQuery += entity
+    db.run(action)
   }
 
   override def updateTodo(entity: Todo): Future[Unit] = {

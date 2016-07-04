@@ -11,11 +11,11 @@ import scala.concurrent.Future
  */
 @ImplementedBy(classOf[TodoServiceImpl])
 trait TodoService {
-  def todoList(profileId: Option[Int]): Future[Seq[Todo]]
+  def todoList(profileId: Option[Long]): Future[Seq[Todo]]
 
   def findTodoById(id: Long): Future[Option[Todo]]
 
-  def addTodo(entity: Todo): Future[Unit]
+  def addTodo(entity: Todo): Future[Todo]
 
   def updateTodo(entity: Todo): Future[Unit]
 }

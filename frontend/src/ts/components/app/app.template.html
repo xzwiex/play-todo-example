@@ -1,9 +1,8 @@
-<div>
-    <h1>My First Angular 2 App {{userInfo | json}}</h1>
+<div class="container">
     <div *ngIf="userInfo && !userInfo.authorized">
-        <google-sign-in [on-auth]="signInCallback"></google-sign-in>
+        <google-sign-in (on-auth)="onGoogleAuthorized($event);"></google-sign-in>
     </div>
-    <div *ngIf="userInfo?.authorized">
-        Welcome, User!
+    <div *ngIf="userInfo && userInfo.authorized">
+        <todo-list></todo-list>
     </div>
 </div>

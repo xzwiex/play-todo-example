@@ -1,34 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { UserService } from '../../services/user.service/user.service';
 import { GoogleSignIn } from '../google-sign-in/google-sign-in.component'
-import {UserInfo} from "../../model/user.info";
-import {NgIf, JsonPipe} from "@angular/common";
+import { TodoListComponent } from '../todo.list/todo.list.component'
+import { UserInfo } from "../../model/user.info";
+import {NgIf} from "@angular/common";
 
 import GoogleUser = gapi.auth2.GoogleUser;
 
 @Component({
-  selector: 'my-app',
+  selector: 'application',
   templateUrl: './app.template.html',
-  directives : [GoogleSignIn, NgIf],
-  providers : [UserService],
-  pipes : [JsonPipe]
+  directives : [GoogleSignIn, NgIf, TodoListComponent],
+  providers : [UserService]
 })
 
 export class AppComponent implements OnInit {
 
-  userInfo : UserInfo = { authorized: false };
+  userInfo : UserInfo;
 
-  user: GoogleUser;
+  private id : string;
 
-  signInCallback : Function;
+  constructor(private userService: UserService, private zone: NgZone) {}
 
-  constructor(private userService: UserService) {}
-
-  ngOnInit(){
+  ngOnInit() {
 
     console.debug('Init MyApp');
-
-    this.signInCallback = this.onGoogleAuthorized.bind(this);
 
     this.getUserInfo();
 
@@ -46,11 +42,17 @@ export class AppComponent implements OnInit {
     console.error(error);
   }
 
-  private onGoogleAuthorized(user: GoogleUser) : void {
+  onGoogleAuthorized(event) {
+
+    const user: GoogleUser = event.value;
 
     let token = user.getAuthResponse().id_token;
 
-    this.userService.authUser(token).subscribe(  (userInfo: UserInfo) => this.handleUserInfo(userInfo) , this.requestErrorHandler);
+    this.zone.run( () => {
+      this.userService.authUser(token).subscribe(  (userInfo: UserInfo) => this.handleUserInfo(userInfo) , this.requestErrorHandler);
+    });
+
+
   }
 
 }

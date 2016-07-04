@@ -1,0 +1,12 @@
+<div class="col-sm-1 col-sm-offset-1 col-xs-2">
+    <div class="checkbox pull-right">
+        <label>
+            <input type="checkbox" (ngModelChange)="onCheckedChange($event);" [(ngModel)]="todo.finished">
+        </label>
+    </div>
+
+</div>
+<div class="col-sm-6 col-xs-10">
+    <input  (ngModelChange)="onTextChange($event);"   class="form-control" type="text"
+           [(ngModel)]="todo.text" ng-class="todo.finished ? 'strike' : ''">
+</div>

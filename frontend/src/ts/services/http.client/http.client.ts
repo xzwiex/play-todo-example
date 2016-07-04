@@ -53,6 +53,14 @@ export class HttpClient {
         });
     }
 
+    put(url, data) : Observable<Response> {
+        let headers = new Headers();
+        this.createAuthorizationHeader(headers);
+        return this.http.put(url, data, {
+            headers: headers
+        });
+    }
+
     setAuthToken(token: string):void {
         this.authToken = token;
         localStorage.setItem(LOCALSTORAGE_KEY, token);

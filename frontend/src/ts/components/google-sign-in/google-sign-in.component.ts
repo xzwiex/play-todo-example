@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import GoogleAuth = gapi.auth2.GoogleAuth;
 import GoogleUser = gapi.auth2.GoogleUser;
 
@@ -9,22 +9,15 @@ import GoogleUser = gapi.auth2.GoogleUser;
 })
 export class GoogleSignIn implements OnInit {
 
-    //@Input('google-id') googleId: string;
-
-    @Input('on-auth') public onAuthCallback: Function;
+    @Output('on-auth') public onAuthCallback = new EventEmitter();
 
     id : string;
 
     auth: GoogleAuth;
 
-    constructor() {
+    ngOnInit() : any {
 
-    }
-
-
-    ngOnInit():any {
         this.id = `gbutton-${this.generateId(8)}`;
-        console.log(gapi);
 
         this.loadAuth2();
 
@@ -45,7 +38,9 @@ export class GoogleSignIn implements OnInit {
     }
 
     private onAuth(user: GoogleUser) {
-        this.onAuthCallback(user);
+        this.onAuthCallback.emit({
+            value : user
+        });
     }
 
     private attachSignin(element: HTMLElement) {

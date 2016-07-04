@@ -1,0 +1,7 @@
+<form  class="form-horizontal">
+
+    <todo-creating-panel (onAdd)="addTodo($event)" ></todo-creating-panel>
+    <div class="form-group" *ngFor="let todo of todos">
+        <todo-item [todo]="todo" (onChange)="updateTodo($event);"></todo-item>
+    </div>
+</form>
