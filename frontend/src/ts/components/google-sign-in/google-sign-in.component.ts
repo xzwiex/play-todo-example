@@ -11,11 +11,11 @@ export class GoogleSignIn implements OnInit, AfterViewChecked {
 
     @Output('on-auth') public onAuthCallback = new EventEmitter();
 
-    id : string;
+    id: string;
 
     auth: GoogleAuth;
 
-    ngOnInit() : any {
+    ngOnInit(): any {
 
         this.id = `gbutton-${this.generateId(8)}`;
 
@@ -27,14 +27,14 @@ export class GoogleSignIn implements OnInit, AfterViewChecked {
     }
 
 
-    private loadAuth2():void {
+    private loadAuth2(): void {
         gapi.load('auth2', () => {
             // Retrieve the singleton for the GoogleAuth library and set up the client.
             this.auth = gapi.auth2.init({
                 /*  client_id: this.googleId,*/
                 cookie_policy: 'single_host_origin',
                 // Request scopes in addition to 'profile' and 'email'
-                //scope: 'additional_scope'
+                // scope: 'additional_scope'
             });
 
             this.attachSignin(document.getElementById(this.id));
@@ -48,7 +48,7 @@ export class GoogleSignIn implements OnInit, AfterViewChecked {
     }
 
     private attachSignin(element: HTMLElement) {
-        
+
         this.auth.attachClickHandler(
             element, {},
             (user: GoogleUser) => this.onAuth(user),
@@ -57,7 +57,7 @@ export class GoogleSignIn implements OnInit, AfterViewChecked {
             });
     }
 
-    private generateId(length:number):string {
+    private generateId(length: number): string {
 
         const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -67,6 +67,5 @@ export class GoogleSignIn implements OnInit, AfterViewChecked {
         }
         return result;
     }
-
 
 }
