@@ -5,6 +5,7 @@ import GoogleUser = gapi.auth2.GoogleUser;
 @Component({
     selector: 'google-sign-in',
     template : require('./google-sign-in.template.html'),
+    styles : [require('./google-sign-in.style.css')],
     host: { '[id]': 'id' },
 })
 export class GoogleSignIn implements OnInit, AfterViewChecked {
