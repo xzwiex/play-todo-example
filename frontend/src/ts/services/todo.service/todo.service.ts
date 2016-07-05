@@ -6,6 +6,13 @@ import { Subscription }     from 'rxjs/Subscription';
 import { Todo }     from '../..//model/todo';
 
 
+
+/**
+ *
+ * Service for working with `Todo` entities
+ *
+ * */
+
 @Injectable()
 export class TodoService {
 
@@ -13,42 +20,20 @@ export class TodoService {
     constructor( private http: HttpClient ) {}
 
     todoList(): Observable<Array<Todo>> {
-        return this.http.get('/todo/list' ).map(
-            (response : Response) => response.json()
-        );
+        return this.http.get('/todo/list' ).map(this.responseHandler);
     }
 
     updateTodo(todo: Todo): Observable<Todo> {
-        return this.http.post('/todo/update', todo ).map(
-            (response : Response) => response.json()
-        );
+        return this.http.post('/todo/update', todo ).map(this.responseHandler);
     }
 
     addTodo(todo: Todo): Observable<Todo> {
-        return this.http.put('/todo/add', todo ).map(
-            (response : Response) => response.json()
-        );
+        return this.http.put('/todo/add', todo ).map(this.responseHandler);
     }
 
-/* todoList : ->
- @$http.get('/todo/list').then( (data) -> data.data )
-
- addTodo : (entity) ->
- @$http.put('/todo/add', entity).then( (data) -> data.data )
-
- updateTodo : (entity) ->
- @$http.post('/todo/update', entity).then( (data) -> data.data )*/
-
-   /* getUserInfo() : Observable<UserInfo> {
-        return this.http.get('/todo/list').map( (reponse: Response) => this.handleUserInfoResponse(reponse) );
+    private responseHandler( response: Response ) {
+        return response.json();
     }
-
-
-    authUser(token:string) : Observable<UserInfo> {
-        return this.http.get('/login/' + token).map(
-            (response : Response) => this.handleUserInfoResponse(response)
-        );
-    }*/
 
 
 }

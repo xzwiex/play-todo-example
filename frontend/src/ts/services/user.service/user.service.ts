@@ -36,5 +36,9 @@ export class UserService {
         );
     }
 
+    logoutUser() : UserInfo {
+        this.http.removeAuthToken();
+        return { authorized: false };
+    }
    
 }

@@ -1,20 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { Todo } from '../../model/todo';
+import { Todo } from '../../../model/todo';
 import { NgFor } from "@angular/common";
-import { TodoService } from "../../services/todo.service/todo.service";
-import { TodoItemComponent } from '../todo.item/todo.item.component';
-import { TodoCreatingPanelComponent } from '../todo.creating.panel/todo.creating.panel.component';
+import { TodoService } from "../../../services/todo.service/todo.service";
+import { TodoItemComponent } from '../todo.item/todo.item.component.ts';
+import { TodoCreatingPanelComponent } from '../todo.creating.panel/todo.creating.panel.component.ts';
+import { TodoStatusPanelComponent } from '../todo.status.panel/todo.status.panel.component';
+import { TodoStatusPipe } from '../../../pipes/todo.status.pipe';
 
 @Component({
     selector: 'todo-list',
     template: require('./todo.list.template.html'),
-    directives : [NgFor, TodoItemComponent, TodoCreatingPanelComponent],
-    providers : [TodoService]
+    directives : [NgFor, TodoItemComponent, TodoCreatingPanelComponent, TodoStatusPanelComponent],
+    providers : [TodoService],
+    pipes : [TodoStatusPipe]
 })
 
 export class TodoListComponent implements OnInit {
 
-    todos: Array<Todo>;
+    todos: Todo[];
+    
+    completeStatus : string = 'all';
 
     constructor(private todoService: TodoService) {}
 
@@ -42,6 +47,10 @@ export class TodoListComponent implements OnInit {
             (error) => console.error('Error creating todo', error)
         );
         //console.log('Adding todo', todo);
+    }
+
+    updateStatus(newStatus: string) : void {
+        this.completeStatus = newStatus;
     }
 
 

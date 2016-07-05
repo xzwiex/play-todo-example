@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, AfterViewChecked } from '@angular/core';
 import GoogleAuth = gapi.auth2.GoogleAuth;
 import GoogleUser = gapi.auth2.GoogleUser;
 
@@ -7,7 +7,7 @@ import GoogleUser = gapi.auth2.GoogleUser;
     template : require('./google-sign-in.template.html'),
     host: { '[id]': 'id' },
 })
-export class GoogleSignIn implements OnInit {
+export class GoogleSignIn implements OnInit, AfterViewChecked {
 
     @Output('on-auth') public onAuthCallback = new EventEmitter();
 
@@ -19,9 +19,13 @@ export class GoogleSignIn implements OnInit {
 
         this.id = `gbutton-${this.generateId(8)}`;
 
-        this.loadAuth2();
-
     }
+
+    public ngAfterViewChecked(): void {
+
+        this.loadAuth2();
+    }
+
 
     private loadAuth2():void {
         gapi.load('auth2', () => {

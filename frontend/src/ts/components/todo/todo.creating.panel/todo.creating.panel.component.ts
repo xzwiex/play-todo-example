@@ -1,5 +1,5 @@
 import { Component, Input, Output , EventEmitter} from '@angular/core';
-import { Todo } from '../../model/todo';
+import { Todo } from '../../../model/todo';
 
 
 
@@ -10,7 +10,7 @@ import { Todo } from '../../model/todo';
 })
 export class TodoCreatingPanelComponent {
 
-    public todo: Todo = {id : 0, finished : false, weight : 0, text : ''};
+    public todo: Todo = {id : 0, finished : false, text : ''};
 
     @Output() public onAdd = new EventEmitter<Todo>();
 
@@ -18,8 +18,13 @@ export class TodoCreatingPanelComponent {
 
 
     addTodo(): void {
-        this.onAdd.emit(this.todo);
-        this.todo = {id : 0, finished : false, weight : 0, text : ''};
+
+        if (this.todo.text.trim()) {
+            this.onAdd.emit(this.todo);
+            this.todo = {id : 0, finished : false, text : ''};
+        }
+
+
     }
 
 }

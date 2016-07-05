@@ -1,7 +1,8 @@
 <form  class="form-horizontal">
 
+    <todo-status-panel (onChange)="updateStatus($event)" ></todo-status-panel>
     <todo-creating-panel (onAdd)="addTodo($event)" ></todo-creating-panel>
-    <div class="form-group" *ngFor="let todo of todos">
+    <div class="form-group" *ngFor="let todo of todos | status : completeStatus ">
         <todo-item [todo]="todo" (onChange)="updateTodo($event);"></todo-item>
     </div>
 </form>

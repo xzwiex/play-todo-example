@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { UserService } from '../../services/user.service/user.service';
 import { GoogleSignIn } from '../google-sign-in/google-sign-in.component'
-import { TodoListComponent } from '../todo.list/todo.list.component'
+import { TodoListComponent } from '../todo/todo.list/todo.list.component'
 import { UserInfo } from "../../model/user.info";
 import {NgIf} from "@angular/common";
 
@@ -24,10 +24,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    console.debug('Init MyApp');
+    //console.debug('Init MyApp');
 
     this.getUserInfo();
 
+  }
+  
+  logout() {
+    this.userInfo = this.userService.logoutUser();
   }
 
   private getUserInfo()  {

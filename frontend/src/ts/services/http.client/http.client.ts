@@ -9,26 +9,21 @@ const LOCALSTORAGE_KEY = 'todo_token';
 @Injectable()
 export class HttpClient {
 
+
+    /*TODO: move baseUrl to config*/
+
     private baseUrl : string = 'http://localhost:9000';
 
     private authToken: string;
 
     constructor(private http: Http) {
-
         this.authToken = (localStorage.getItem(LOCALSTORAGE_KEY) || '').toString();
     }
 
-    createAuthorizationHeader(headers:Headers) {
-
-        if (this.authToken) {
-            headers.append('Authorization', 'Bearer ' + this.authToken);
-        }
-
-    }
 
     get( url : string, params : Map<string, any> = new Map<string, any>() ) : Observable<Response> {
 
-        console.debug( 'Get URL:', url );
+        //console.debug( 'Get URL:', url );
 
         const search = new URLSearchParams();
 
@@ -64,6 +59,20 @@ export class HttpClient {
     setAuthToken(token: string):void {
         this.authToken = token;
         localStorage.setItem(LOCALSTORAGE_KEY, token);
+    }
+    
+    removeAuthToken():void {
+        this.authToken = null;
+        localStorage.removeItem(LOCALSTORAGE_KEY);
+    }
+
+
+    private createAuthorizationHeader(headers:Headers) {
+
+        if (this.authToken) {
+            headers.append('Authorization', 'Bearer ' + this.authToken);
+        }
+
     }
 
 

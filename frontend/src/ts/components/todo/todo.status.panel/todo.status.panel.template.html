@@ -1,0 +1,15 @@
+<div class="form-group">
+    <div class="col-sm-6 col-sm-offset-2 col-xs-12">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" [ngClass]="status=='all' ? 'active' : ''">
+                <a href="#"  (click)="changeStatus('all')" >All</a>
+            </li>
+            <li role="presentation"  [ngClass]="status=='finished' ? 'active' : ''">
+                <a href="#"  (click)="changeStatus('finished')">Completed</a>
+            </li>
+            <li role="presentation"  [ngClass]="status=='unfinished' ? 'active' : ''">
+                <a href="#" (click)="changeStatus('unfinished')">Uncompleted</a>
+            </li>
+        </ul>
+    </div>
+</div>
