@@ -10,7 +10,7 @@ import play.api.mvc._
 import scala.concurrent.Future
 
 class Application @Inject() (
-                            configuration : Configuration,
+                              configuration : Configuration,
                               handlers: HandlerCache,
                               deadbolt: DeadboltActions) extends Controller {
 
