@@ -9,7 +9,7 @@ scalaVersion := "2.11.7"
 libraryDependencies ++= Seq(
   /*evolutions,*/
   /*jdbc,*/
-  cache,
+  /*cache,*/
   ws,
   specs2 % Test,
   "com.h2database" % "h2" % "1.4.192",
