@@ -14,19 +14,11 @@ class Application @Inject() (
                               handlers: HandlerCache,
                               deadbolt: DeadboltActions) extends Controller {
 
-  def index = deadbolt.WithAuthRequest()() { implicit authRequest =>
+  def index = deadbolt.WithAuthRequest()() { authRequest =>
     Future.successful {
       val googleId = configuration.getString("app.oauth.google.id").get
       Ok(views.html.index(handlers.apply(), googleId))
     }
   }
 
-
-  def login = Action {
-    implicit request =>
-      val json = Json.toJson("OK")
-      Ok(json).withSession(
-        "profile" -> "test@mail.com"
-      )
-  }
 }
