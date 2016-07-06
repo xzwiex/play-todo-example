@@ -16,6 +16,6 @@ trait ProfileService {
 
   def findProfileByEmail(email: String) : Future[Option[Profile]]
 
-  def createProfile(entity: Profile) : Future[Any]
+  def createProfile(entity: Profile) : Future[Option[Profile]]
 
 }

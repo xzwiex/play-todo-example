@@ -33,3 +33,6 @@ resolvers += "maven-central" at "http://central.maven.org/maven2"
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
+
+
+javaOptions in Test += "-Dconfig.file=application.test.conf"

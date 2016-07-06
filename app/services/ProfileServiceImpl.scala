@@ -40,6 +40,10 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
 
   private val profiles = TableQuery[Profiles]
 
+  private val insertQuery = profiles returning profiles.map(_.id) into ((item, id) => item.copy(id = id))
+
+
+
   override def findProfileById(id: Long) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.id === id).result.headOption)
   }
@@ -48,11 +52,13 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
     db.run(profiles.filter(_.email === email).result.headOption)
   }
 
-  override def createProfile(entity: Profile) : Future[Any] = {
+  override def createProfile(entity: Profile) : Future[Option[Profile]] = {
 
     findProfileByEmail(entity.email).flatMap {
       p =>  if( p.isEmpty ) {
-        db.run(profiles += entity).map( r => () )
+
+        val action = insertQuery += entity
+        db.run(action).map(x => Some(x))
       } else Future.successful(None)
     }
 
