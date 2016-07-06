@@ -25,6 +25,11 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
   import driver.api._
 
 
+  /**
+    * Profiles table Schema
+    */
+
+
   class Profiles(tag: Tag) extends Table[Profile](tag, "profile") {
     // Auto Increment the id primary key column
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
@@ -44,22 +49,45 @@ class ProfileServiceImpl @Inject()(protected val dbConfigProvider: DatabaseConfi
 
 
 
+  /**
+  *
+    * Find user by id
+    *
+    * @param id: Long
+    *
+  * */
+
   override def findProfileById(id: Long) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.id === id).result.headOption)
   }
+
+  /**
+    *
+    * Find user by email
+    *
+    * @param email: Email
+    *
+    * */
 
   override def findProfileByEmail(email: String) : Future[Option[Profile]] = {
     db.run(profiles.filter(_.email === email).result.headOption)
   }
 
+  /**
+    *
+    * Create user by email (if he doesn't exists - return None)
+    *
+    * @param entity: Profile
+    *
+    * */
+
   override def createProfile(entity: Profile) : Future[Option[Profile]] = {
 
     findProfileByEmail(entity.email).flatMap {
-      p =>  if( p.isEmpty ) {
-
+      _.map( p => Future.successful(None) ).getOrElse {
         val action = insertQuery += entity
         db.run(action).map(x => Some(x))
-      } else Future.successful(None)
+      }
     }
 
   }

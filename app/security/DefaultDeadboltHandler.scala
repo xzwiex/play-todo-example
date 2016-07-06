@@ -3,6 +3,7 @@ package security
 import be.objectify.deadbolt.scala.models.Subject
 import be.objectify.deadbolt.scala.{AuthenticatedRequest, DeadboltHandler, DynamicResourceHandler}
 import model.SiteProfile
+import model.service.JWTService
 import play.Configuration
 import play.api.mvc.{Request, Result, Results}
 

@@ -1,8 +1,7 @@
-package model.db
+package model
 
 import java.util.Date
 
-import model.SiteProfile
 import play.api.libs.json.Json
 
 /**

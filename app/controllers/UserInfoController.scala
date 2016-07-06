@@ -2,10 +2,11 @@ package controllers
 
 import be.objectify.deadbolt.scala.DeadboltActions
 import com.google.inject.Inject
+import model.service.JWTService
 import model.{SiteProfile, UserInfo}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
-import security.JWTService
+import services.JWTServiceImpl
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -17,9 +18,7 @@ class UserInfoController @Inject()(jwtService: JWTService, deadbolt : DeadboltAc
 
   def userInfo = deadbolt.WithAuthRequest()() { request =>
     Future {
-
-      val userInfo =  request.subject.map {
-        subject =>
+      val userInfo =  request.subject.map { subject =>
           val user = subject.asInstanceOf[SiteProfile]
           UserInfo(true, Some(jwtService.encode( user )) )
       }.getOrElse( UserInfo(false)  )

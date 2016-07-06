@@ -5,6 +5,7 @@ import javax.inject.Singleton
 import be.objectify.deadbolt.scala.{DeadboltHandler, HandlerKey}
 import be.objectify.deadbolt.scala.cache.HandlerCache
 import com.google.inject.Inject
+import model.service.JWTService
 import play.Configuration
 
 /**

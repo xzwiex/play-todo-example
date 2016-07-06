@@ -15,14 +15,15 @@ import scala.concurrent.Future
 
 class TodoController @Inject() (
                                  todoService: TodoServiceImpl,
-                                 deadbolt: DeadboltActions, handlers: HandlerCache, actionBuilder: ActionBuilders
-                                 ) extends Controller {
+                                 deadbolt: DeadboltActions,
+                                 handlers: HandlerCache,
+                                 actionBuilder: ActionBuilders
+                               ) extends Controller {
 
 
   def todoList =  deadbolt.SubjectPresent()() { request =>
     val profileId = request.subject.map(_.asInstanceOf[SiteProfile].id).get
-    todoService.todoList(Some(profileId)).map {
-      todos =>
+    todoService.todoList(Some(profileId)).map { todos =>
         val json = Json.toJson(todos.map(SiteTodo.fromDto))
         Ok(json)
     }
@@ -30,7 +31,7 @@ class TodoController @Inject() (
 
 
 
-  def addEntry() =  deadbolt.SubjectPresent()(parse.json) { request =>
+  def addEntry =  deadbolt.SubjectPresent()(parse.json) { request =>
 
     val profileId = request.subject.map(_.asInstanceOf[SiteProfile].id).get
     val toCreate = request.body.validate[SiteTodo].get
@@ -42,27 +43,23 @@ class TodoController @Inject() (
   }
 
 
-  def updateEntry() = deadbolt.SubjectPresent()(parse.json) { request =>
+  def updateEntry = deadbolt.SubjectPresent()(parse.json) { request =>
 
     val todo = request.body.validate[SiteTodo].get
     val profileId = request.subject.map(_.asInstanceOf[SiteProfile].id).get
 
-    todoService.findTodoById( todo.id ).flatMap {
-      _.map {
-        dbTodo =>
+    todoService.findTodoById( todo.id ).flatMap { _.map { dbTodo =>
 
           if (dbTodo.profileId != profileId) {
             Future.successful(Forbidden(Json.toJson(Map("status" -> "Access denied!") )))
           }
           else {
-
             val toUpdate = dbTodo.copy( finished = todo.finished, text = todo.text )
             todoService.updateTodo(toUpdate).map(x => Ok(Json.toJson(SiteTodo.fromDto(toUpdate))))
           }
 
       }.getOrElse( Future.successful(NotFound("Entity not found") ) )
 
-      /**/
     }
 
 

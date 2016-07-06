@@ -2,7 +2,7 @@ package model
 
 
 import be.objectify.deadbolt.scala.models.{Permission, Role, Subject}
-import model.db.{JwtProfile, Profile}
+import model.db.Profile
 import play.api.libs.json.Json
 
 /**
