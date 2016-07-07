@@ -14,7 +14,7 @@ class Application @Inject() (
                               handlers: HandlerCache,
                               deadbolt: DeadboltActions) extends Controller {
 
-  def index = deadbolt.WithAuthRequest()() { authRequest =>
+  def index = deadbolt.WithAuthRequest()() { implicit authRequest =>
     Future.successful {
       val googleId = configuration.getString("app.oauth.google.id").get
       Ok(views.html.index(handlers.apply(), googleId))
