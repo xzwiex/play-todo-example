@@ -7,8 +7,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-
   ws,
+  filters,
   specs2 % Test,
   "com.h2database" % "h2" % "1.4.192",
   "org.postgresql" % "postgresql" % "9.3-1100-jdbc4",

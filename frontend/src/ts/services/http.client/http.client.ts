@@ -28,7 +28,7 @@ export class HttpClient {
         const search = new URLSearchParams();
 
         params.forEach( (v: any, idx: string, map: Map<string, any>) => {
-            params.set(idx, v);
+            search.set(idx, v);
         });
 
         let headers = new Headers();
